@@ -45,9 +45,11 @@ public final class WindowsSpotify implements AutoCloseable {
         try {
             Files.createDirectories(directory);
             Path script = directory.resolve("spotify-session.ps1");
-            try (InputStream in = WindowsSpotify.class.getResourceAsStream("/native/spotify-session.ps1")) {
-                if (in == null) throw new IOException("Missing bridge resource");
-                Files.copy(in, script, StandardCopyOption.REPLACE_EXISTING);
+            for (String resource : List.of("spotify-session.ps1", "SpotifyBridge.cs")) {
+                try (InputStream in = WindowsSpotify.class.getResourceAsStream("/native/" + resource)) {
+                    if (in == null) throw new IOException("Missing bridge resource: " + resource);
+                    Files.copy(in, directory.resolve(resource), StandardCopyOption.REPLACE_EXISTING);
+                }
             }
             Path powershell = Path.of(System.getenv("SystemRoot"), "System32", "WindowsPowerShell", "v1.0", "powershell.exe");
             while (!closed) {
