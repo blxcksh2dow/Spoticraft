@@ -1,0 +1,32 @@
+{
+  "architecture": "precompiled-windows-helper-no-runtime-scripts",
+  "sourceCommit": "485984d60561101b7e16d1d6b34866d0b1f3e0c5",
+  "runUrl": "https://github.com/blxcksh2dow/Spoticraft/actions/runs/36240553688",
+  "checks": [
+    "native-regression-tests",
+    "junit-tests",
+    "jar-content-validation",
+    "native-process-smoke-test"
+  ],
+  "scans": [
+    {
+      "scannedUtc": "2026-09-26T12:02:33.2420873Z",
+      "runId": "36240553688",
+      "signatures": "1.459.410.0",
+      "sha256": "8c65e028deba372a5744f5df71eea9f1a2f3d690972a8d16dd807f68a4483d75",
+      "result": "no-detection-on-ci-runner",
+      "fileName": "Spoticraft.Bridge.exe",
+      "engine": "1.1.26080.3"
+    },
+    {
+      "scannedUtc": "2026-09-26T12:02:37.0285446Z",
+      "runId": "36240553688",
+      "signatures": "1.459.410.0",
+      "sha256": "3f4e6d149184a01bde57c5b3e1026009bf886659099addffb0425b5fddd63bb4",
+      "result": "no-detection-on-ci-runner",
+      "fileName": "spoticraft-26.2.jar",
+      "engine": "1.1.26080.3"
+    }
+  ],
+  "limitations": "CI scans are not a guarantee of safety or acceptance by Defender/SmartScreen on another PC. No antivirus exclusions are required or recommended. This does not clear the old reported artifact."
+}
