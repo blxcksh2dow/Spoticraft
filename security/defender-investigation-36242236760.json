@@ -1,0 +1,132 @@
+{
+  "runUrl": "https://github.com/blxcksh2dow/Spoticraft/actions/runs/36242236760",
+  "source": "GitHub check-run annotations",
+  "rawSteps": [
+    {
+      "stage": "defender-detections-during-test",
+      "data": []
+    },
+    {
+      "stage": "download-after-attachment-validation",
+      "data": {
+        "sha256After": "3f4e6d149184a01bde57c5b3e1026009bf886659099addffb0425b5fddd63bb4",
+        "exitCode": 0,
+        "sha256Before": "3f4e6d149184a01bde57c5b3e1026009bf886659099addffb0425b5fddd63bb4",
+        "fileStillExists": true,
+        "output": "Scan starting...\r\nScan finished.\r\nScanning C:\\Users\\runneradmin\\Downloads\\SpoticraftSecurityInvestigation\\spoticraft-26.2 (1).jar found no threats.",
+        "scanCompleted": true
+      }
+    },
+    {
+      "stage": "download-after-attachment-validation-exclusion-check",
+      "data": {
+        "output": "C:\\Users\\runneradmin\\Downloads\\SpoticraftSecurityInvestigation\\spoticraft-26.2 (1).jar [\\Device\\HarddiskVolume4\\Users\\runneradmin\\Downloads\\SpoticraftSecurityInvestigation\\spoticraft-26.2 (1).jar] is not excluded. Exit code is 1.",
+        "exitCode": 1,
+        "explicitlyNotExcluded": true
+      }
+    },
+    {
+      "stage": "windows-attachment-save",
+      "data": {
+        "fileStillExists": true,
+        "hresult": "0x00000000",
+        "zoneIdentifier": "[ZoneTransfer]\nZoneId=3\nReferrerUrl=https://github.com/blxcksh2dow/Spoticraft\nHostUrl=https://raw.githubusercontent.com/blxcksh2dow/Spoticraft/71b69f0f7fc3610c6dac2662cbfc25bb869a4811/download/spoticraft-26.2.jar"
+      }
+    },
+    {
+      "stage": "exact-public-download",
+      "data": {
+        "url": "https://raw.githubusercontent.com/blxcksh2dow/Spoticraft/71b69f0f7fc3610c6dac2662cbfc25bb869a4811/download/spoticraft-26.2.jar",
+        "sha256": "3f4e6d149184a01bde57c5b3e1026009bf886659099addffb0425b5fddd63bb4",
+        "matchesRepository": true
+      }
+    },
+    {
+      "stage": "repository-copy-static-scan",
+      "data": {
+        "sha256After": "3f4e6d149184a01bde57c5b3e1026009bf886659099addffb0425b5fddd63bb4",
+        "exitCode": 0,
+        "sha256Before": "3f4e6d149184a01bde57c5b3e1026009bf886659099addffb0425b5fddd63bb4",
+        "fileStillExists": true,
+        "output": "Scan starting...\r\nScan finished.\r\nScanning D:\\a\\Spoticraft\\Spoticraft\\download\\spoticraft-26.2.jar found no threats.",
+        "scanCompleted": true
+      }
+    },
+    {
+      "stage": "repository-copy-static-scan-exclusion-check",
+      "data": {
+        "output": "D:\\a\\Spoticraft\\Spoticraft\\download\\spoticraft-26.2.jar [\\Device\\HarddiskVolume5\\a\\Spoticraft\\Spoticraft\\download\\spoticraft-26.2.jar] is not excluded. Exit code is 1.",
+        "exitCode": 1,
+        "explicitlyNotExcluded": true
+      }
+    },
+    {
+      "stage": "maps-connectivity",
+      "data": {
+        "exitCode": 0,
+        "output": "---------------------------- MpCmdRunShowNetworkInfo() ------------------------------\r\nMpIsConnectedToInternet(): hr = 0, fIsConnectToInternet: true\r\nMpIsPaidNetwork(): hr = 0x1 (0 - S_OK, paid; 1 - S_FALSE, not paid; other - failure)\r\n-------------------------------------------------------------------------------------\r\nLast Successful MAPS connection: [9/26/2026 12:32:44 PM]\r\nValidateMapsConnection successfully established a connection to MAPS"
+      }
+    },
+    {
+      "stage": "defender-environment",
+      "data": {
+        "AMRunningMode": "Normal",
+        "IsTamperProtected": false,
+        "OSBuild": "26100",
+        "DisableIOAVProtection": false,
+        "RealTimeProtectionEnabled": true,
+        "IoavProtectionEnabled": true,
+        "DisableRealtimeMonitoring": false,
+        "DisableBlockAtFirstSeen": false,
+        "AntivirusEnabled": true,
+        "DisableArchiveScanning": false,
+        "OnAccessProtectionEnabled": true,
+        "AMServiceEnabled": true,
+        "PUAProtection": 0,
+        "MAPSReporting": 2,
+        "BehaviorMonitorEnabled": true,
+        "OSVersion": "10.0.26100",
+        "AMEngineVersion": "1.1.26080.3",
+        "SubmitSamplesConsent": 1,
+        "OS": "Microsoft Windows Server 2025 Datacenter",
+        "CloudBlockLevel": 0,
+        "validationIssues": [],
+        "CloudExtendedTimeout": 0,
+        "AMProductVersion": "4.18.26080.4",
+        "AntivirusSignatureVersion": "1.459.412.0",
+        "AntivirusSignatureLastUpdated": "/Date(1790405206000)/"
+      }
+    },
+    {
+      "stage": "defender-environment",
+      "data": {
+        "AMRunningMode": "Normal",
+        "IsTamperProtected": false,
+        "OSBuild": "26100",
+        "DisableIOAVProtection": false,
+        "RealTimeProtectionEnabled": true,
+        "IoavProtectionEnabled": true,
+        "DisableRealtimeMonitoring": false,
+        "DisableBlockAtFirstSeen": false,
+        "AntivirusEnabled": true,
+        "DisableArchiveScanning": false,
+        "OnAccessProtectionEnabled": true,
+        "AMServiceEnabled": true,
+        "PUAProtection": 0,
+        "MAPSReporting": 2,
+        "BehaviorMonitorEnabled": true,
+        "OSVersion": "10.0.26100",
+        "AMEngineVersion": "1.1.26080.3",
+        "SubmitSamplesConsent": 1,
+        "OS": "Microsoft Windows Server 2025 Datacenter",
+        "CloudBlockLevel": 0,
+        "validationIssues": [],
+        "CloudExtendedTimeout": 0,
+        "AMProductVersion": "4.18.26080.4",
+        "AntivirusSignatureVersion": "1.459.335.0",
+        "AntivirusSignatureLastUpdated": "/Date(1790063553000)/"
+      }
+    }
+  ],
+  "reviewConclusion": "Both sample paths confirmed not excluded; completed scans report found no threats, MAPS connected and protection verified. No reproduction on affected user device, no analyst verdict, distribution remains suspended."
+}

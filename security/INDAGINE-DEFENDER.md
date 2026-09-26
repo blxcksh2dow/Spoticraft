@@ -72,6 +72,17 @@ note e il test Attachment Services non equivale alla sessione reale del browser.
 Il componente non è firmato Authenticode; non sappiamo se questo influenzi il
 verdetto e non lo presentiamo come causa provata.
 
+### Ripetizione conclusa con entrambi i percorsi non esclusi
+
+Nel [test successivo](https://github.com/blxcksh2dow/Spoticraft/actions/runs/36242236760)
+entrambi i percorsi sono stati confermati non esclusi e le scansioni hanno
+restituito esplicitamente `found no threats`. Sono passati anche **13 test del
+validatore**, incluso il caso in cui exit code 0 accompagna `was skipped`.
+[Prove strutturate](defender-investigation-36242236760.json).
+
+Questo conferma l'esito limitato al laboratorio, non risolve il rilevamento
+sul dispositivo dell'utente né autorizza a ignorarlo. La mod non è stata modificata.
+
 ## Correzioni al sistema di verifica
 
 - Una scansione saltata, esclusa, interrotta, senza un verdetto esplicito o con
