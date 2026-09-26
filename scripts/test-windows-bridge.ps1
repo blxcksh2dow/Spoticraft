@@ -1,23 +1,33 @@
-# Run on Windows PowerShell 5.1, the exact runtime launched by the mod, not pwsh.
+# Verify the actual packaged helper starts and returns JSON, without PowerShell at runtime.
 $ErrorActionPreference = 'Stop'
 try {
-    if ($PSVersionTable.PSEdition -ne 'Desktop') { throw 'Run with Windows PowerShell 5.1' }
-    . (Join-Path $PSScriptRoot '..\src\main\resources\native\spotify-session.ps1') -LibraryOnly
-    Initialize-SpoticraftBridge ([IO.File]::ReadAllText((Join-Path $PSScriptRoot 'WindowsBridgeTests.cs')))
-    $summary = [Spoticraft.Tests.WindowsBridgeTests]::Run()
-    Write-Host "::notice title=Windows bridge tests::$summary"
-    # Check JSON serialization of the exact DTOs seen by Java (including numeric fields).
-    $sample = New-Object Spoticraft.Native.Snapshot
-    $sample.available = $true; $sample.title = 'Song'; $sample.duration = 180
-    $sample.diagnostics.Add((New-Object Spoticraft.Native.Diagnostic 'cover-read', (New-Object System.Exception 'Test error')))
-    $wire = $sample | ConvertTo-Json -Compress -Depth 5 | ConvertFrom-Json
-    if (-not $wire.available -or $wire.title -ne 'Song' -or $wire.duration -ne 180 -or $wire.diagnostics[0].stage -ne 'cover-read') {
-        throw 'JSON protocol round-trip failed'
+    $exe = Join-Path (Split-Path $PSScriptRoot -Parent) 'build\generated\bridge-resources\native\Spoticraft.Bridge.exe'
+    $start = New-Object Diagnostics.ProcessStartInfo
+    $start.FileName = $exe
+    $start.Arguments = '--once'
+    $start.UseShellExecute = $false
+    $start.CreateNoWindow = $true
+    $start.RedirectStandardOutput = $true
+    $start.RedirectStandardError = $true
+    $process = [Diagnostics.Process]::Start($start)
+    $stdout = $process.StandardOutput.ReadToEndAsync()
+    $stderr = $process.StandardError.ReadToEndAsync()
+    if (-not $process.WaitForExit(20000)) { $process.Kill(); throw 'Bridge process timed out.' }
+    $line = $stdout.GetAwaiter().GetResult()
+    $errorText = $stderr.GetAwaiter().GetResult()
+    if ($process.ExitCode -ne 0) { throw "Bridge failed: $errorText $line" }
+    $snapshot = $line | ConvertFrom-Json
+    if ($null -eq $snapshot.available -or $null -eq $snapshot.status -or $null -eq $snapshot.diagnostics) {
+        throw 'Bridge stdout did not contain the expected JSON DTO.'
     }
-    Write-Host '::notice title=Windows bridge JSON::DTO serialization test passed.'
+    if ($snapshot.diagnostics.Count -gt 0) {
+        throw "Native session smoke test failed: $($snapshot.diagnostics | ConvertTo-Json -Compress)"
+    }
+    Write-Host '::notice title=Native bridge smoke test::Precompiled executable starts and reads Windows sessions, returning valid JSON. No PowerShell child or runtime compilation.'
 } catch {
-    $message = ($_ | Out-String) + $_.ScriptStackTrace
-    $message = $message.Replace('%', '%25').Replace("`r", '%0D').Replace("`n", '%0A')
-    Write-Host "::error title=Windows bridge regression test::$message"
+    $message = ($_ | Out-String).Replace('%', '%25').Replace("`r", '%0D').Replace("`n", '%0A')
+    Write-Host "::error title=Native bridge smoke test failed::$message"
     exit 1
+} finally {
+    if ($null -ne $process) { $process.Dispose() }
 }

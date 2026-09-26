@@ -23,6 +23,22 @@ dependencies {
 }
 sourceSets.test.compileClasspath += sourceSets.client.output
 sourceSets.test.runtimeClasspath += sourceSets.client.output
+// Native bridge is built on Windows once, not on the player's computer at launch.
+def bridgeResources = layout.buildDirectory.dir('generated/bridge-resources')
+def nativeBridge = tasks.register('compileNativeBridge', Exec) {
+    inputs.dir 'native'
+    inputs.file 'scripts/build-native.ps1'
+    outputs.dir bridgeResources
+    doFirst {
+        if (!System.getProperty('os.name').startsWith('Windows')) {
+            throw new GradleException('Build the Windows helper on Windows (or use the verified CI JAR).')
+        }
+    }
+    commandLine 'powershell.exe', '-NoLogo', '-NoProfile', '-NonInteractive',
+        '-File', file('scripts/build-native.ps1').absolutePath, '-RunTests'
+}
+sourceSets.main.resources.srcDir bridgeResources
+processResources.dependsOn nativeBridge
 processResources {
     inputs.property 'version', project.version
     inputs.property 'loader_version', project.loader_version
@@ -47,4 +63,9 @@ tasks.register('downloadMod', Copy) {
 // Remove a previous download artifact too, so a failed clean build cannot look successful.
 tasks.named('clean') {
     doLast { delete layout.projectDirectory.file("download/spoticraft-${project.version}.jar") }
+}
+
+tasks.named('sourcesJar') {
+    dependsOn nativeBridge
+    from('native') { into 'native-source' }
 }

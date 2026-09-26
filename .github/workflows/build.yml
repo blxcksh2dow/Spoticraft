@@ -16,19 +16,10 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v5
-      - name: Respect security hold
-        shell: powershell
-        run: |
-          if (Test-Path 'download/SECURITY-HOLD.txt') {
-            throw 'Distribution suspended pending review of the reported Defender detection. See download/SECURITY-HOLD.txt.'
-          }
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '25'
-      - name: Test Windows media bridge on PowerShell 5.1
-        shell: powershell
-        run: ./scripts/test-windows-bridge.ps1
       - name: Compile and test
         shell: pwsh
         run: |
@@ -40,16 +31,28 @@ jobs:
             Write-Output "::error title=Gradle build output::$message"
             exit $result
           }
-      - name: Require Defender scan before publishing
+      - name: Verify packaged artifact
+        shell: pwsh
+        run: python scripts/verify-artifact.py
+      - name: Scan precompiled helper before execution
         shell: powershell
-        run: ./scripts/scan-windows.ps1
+        run: ./scripts/scan-windows.ps1 -Artifact build/generated/bridge-resources/native/Spoticraft.Bridge.exe -ReportPath build/helper-defender.json
+      - name: Smoke-test actual precompiled helper
+        shell: powershell
+        run: ./scripts/test-windows-bridge.ps1
+      - name: Require Defender scan of final JAR
+        shell: powershell
+        run: ./scripts/scan-windows.ps1 -ReportPath build/jar-defender.json
+      - name: Record verification results
+        shell: pwsh
+        run: python scripts/record-verification.py
       - name: Save compiled JAR on session branch
-        if: github.ref == 'refs/heads/arena/01a0dd20-spoticraft'
+        if: github.ref == 'refs/heads/arena/01a0dd20-spoticraft' && hashFiles('download/SECURITY-HOLD.txt') == ''
         shell: pwsh
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -f download/spoticraft-26.2.jar
+          git add -f download/spoticraft-26.2.jar download/spoticraft-26.2-verification.json
           git diff --cached --quiet
           if ($LASTEXITCODE -ne 0) {
             git commit -m "Add verified Spoticraft 26.2 build"
@@ -59,10 +62,13 @@ jobs:
           }
           exit 0
       - name: Upload installable mod
+        if: hashFiles('download/SECURITY-HOLD.txt') == ''
         uses: actions/upload-artifact@v4
         with:
           name: spoticraft-26.2
-          path: download/spoticraft-26.2.jar
+          path: |
+            download/spoticraft-26.2.jar
+            download/spoticraft-26.2-verification.json
           if-no-files-found: error
       - name: Upload diagnostics
         if: failure()
@@ -71,6 +77,8 @@ jobs:
           name: build-diagnostics
           path: |
             build-output.log
+            defender-scan.log
+            build/*defender.json
             build/reports/
             build/test-results/
           if-no-files-found: ignore

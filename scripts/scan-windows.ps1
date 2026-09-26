@@ -1,5 +1,5 @@
 # Scan without executing the JAR. A missing/inactive scanner is NOT a clean result.
-param([string]$Artifact = 'download\spoticraft-26.2.jar')
+param([string]$Artifact = 'download\spoticraft-26.2.jar', [string]$ReportPath = 'build\defender-scan-report.json')
 $ErrorActionPreference = 'Stop'
 try {
     $path = (Resolve-Path -LiteralPath $Artifact).Path
@@ -29,6 +29,15 @@ try {
         throw "Defender scan did not pass. Exit code: $code. Detections: $details"
     }
     if ((Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash -ne $hash) { throw 'The artifact changed during scanning.' }
+    $report = @{
+        fileName = [IO.Path]::GetFileName($path); sha256 = $hash.ToLowerInvariant()
+        engine = $status.AMEngineVersion; signatures = $status.AntivirusSignatureVersion
+        scannedUtc = [DateTime]::UtcNow.ToString('o'); result = 'no-detection-on-ci-runner'
+        runId = $env:GITHUB_RUN_ID
+    }
+    $fullReport = [IO.Path]::GetFullPath($ReportPath)
+    [IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($fullReport)) | Out-Null
+    [IO.File]::WriteAllText($fullReport, ($report | ConvertTo-Json), (New-Object Text.UTF8Encoding($false)))
     Write-Host "::notice title=Defender scan completed::No detection on this runner for SHA-256 $hash, signatures $($status.AntivirusSignatureVersion). This is not a guarantee of safety on other devices."
 } catch {
     $message = ($_ | Out-String).Replace('%', '%25').Replace("`r", '%0D').Replace("`n", '%0A')

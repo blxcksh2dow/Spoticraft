@@ -1,5 +1,5 @@
-// Compiled locally by Windows PowerShell 5.1 against Windows' own WinRT metadata.
-// WinRT objects never cross the PowerShell boundary: only plain .NET DTOs do.
+// Compiled at build time into Spoticraft.Bridge.exe. No scripts or compiler at runtime.
+// Read-only Windows media session access; only JSON DTOs cross the Java process boundary.
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -50,9 +50,11 @@ namespace Spoticraft.Native {
         public Media ReadMedia() {
             var properties = Bridge.Wait(session.TryGetMediaPropertiesAsync());
             if (properties == null) throw new InvalidOperationException("Windows returned no media properties");
-            var thumbnail = properties.Thumbnail;
             return new Media { Title = properties.Title, Artist = properties.Artist, Album = properties.AlbumTitle,
-                ReadCover = thumbnail == null ? (Func<List<Diagnostic>, string>)null : d => Bridge.ReadThumbnail(thumbnail, d) };
+                ReadCover = d => {
+                    var thumbnail = properties.Thumbnail;
+                    return thumbnail == null ? "" : Bridge.ReadThumbnail(thumbnail, d);
+                } };
         }
         public Timeline ReadTimeline() {
             var t = session.GetTimelineProperties();
