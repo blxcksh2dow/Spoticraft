@@ -1,0 +1,26 @@
+name: Scan reported JAR with Defender
+on:
+  push:
+    branches: [arena/01a0dd20-spoticraft]
+    paths:
+      - '.github/workflows/security-scan.yml'
+      - 'scripts/scan-windows.ps1'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  defender:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - name: Scan existing JAR without executing it
+        shell: powershell
+        run: ./scripts/scan-windows.ps1
+      - name: Upload scanner output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: defender-scan-log
+          path: defender-scan.log
+          if-no-files-found: ignore

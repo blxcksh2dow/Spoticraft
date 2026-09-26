@@ -1,5 +1,14 @@
 # Spoticraft · 26.2
 
+> **AVVISO SICUREZZA — non installare il JAR attuale.**
+> Microsoft Defender ha segnalato `Trojan:Script/Wacatac.B!ml` sul download della
+> build WinRT (`SHA-256 d242a29429aa2b2547bc701052b1807927ab666fbe25b25285053ee4ceb3f313`).
+> Il rilevamento è in verifica: **non è stato accertato un falso positivo**.
+> Non ripristinare il file, non disabilitare Defender e non aggiungere esclusioni.
+> I link e gli artefatti sottostanti identificano la build segnalata, non una
+> versione raccomandata per l'installazione. Anche ricompilarla non certifica la sicurezza.
+
+
 Mod **client Fabric**, versione **26.2**, destinata a **Minecraft Java 26.2** e
 **Windows 10 (1809+) / Windows 11**, con Spotify desktop (classico o Microsoft Store).
 Nessun account Spotify da collegare alla mod, Client ID o token richiesto.

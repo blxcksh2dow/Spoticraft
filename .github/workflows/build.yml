@@ -5,6 +5,8 @@ on:
     paths-ignore:
       - 'download/**'
       - '*.md'
+      - 'scripts/scan-windows.ps1'
+      - '.github/workflows/security-scan.yml'
   workflow_dispatch:
 permissions:
   contents: write
@@ -32,6 +34,9 @@ jobs:
             Write-Output "::error title=Gradle build output::$message"
             exit $result
           }
+      - name: Require Defender scan before publishing
+        shell: powershell
+        run: ./scripts/scan-windows.ps1
       - name: Save compiled JAR on session branch
         if: github.ref == 'refs/heads/arena/01a0dd20-spoticraft'
         shell: pwsh
