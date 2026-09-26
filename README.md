@@ -13,7 +13,9 @@ Non serve eseguire i BAT per installare questa build: copia il JAR nella cartell
 `mods` insieme a Fabric API per Minecraft 26.2.
 
 > **Stato: compilazione e test riusciti su Windows con JDK 25 tramite GitHub Actions.**
-> [Build verificata](https://github.com/blxcksh2dow/Spoticraft/actions/runs/36235520219).
+> [Build verificata](https://github.com/blxcksh2dow/Spoticraft/actions/runs/36235968172).
+> Ricompilata con dipendenza vincolata a **Fabric Loader 0.19.3**; requisito minimo
+> nel JAR: `>=0.19.3`. Sostituisci il vecchio JAR, senza conservarne due copie.
 > Corretto il riferimento non valido a `Options.hideGui` per Minecraft 26.2.
 > Verificati integrità del JAR, classi, risorse e metadati. La prova in gioco
 > con Spotify resta da eseguire. Il progetto e il JAR sono pubblicati nel branch
@@ -76,13 +78,13 @@ Oppure da PowerShell, nella cartella del progetto:
 La task `downloadMod` dipende da `build`: non copia un JAR se i test o la build
 falliscono. Non pubblica niente su GitHub o repository Maven.
 Il wrapper Gradle **9.5.1** è incluso; usa il plugin Fabric Loom del template
-ufficiale 26.2 (**1.17-SNAPSHOT**), Fabric Loader **0.19.5** e Fabric API
+ufficiale 26.2 (**1.17-SNAPSHOT**), Fabric Loader **0.19.3** e Fabric API
 **0.161.0+26.2**. Loom è uno snapshot, quindi la risoluzione del plugin può
 cambiare a monte. Non si usano Yarn o rimappature obsolete per questa versione.
 
 ## Installazione
 
-1. Installa Fabric Loader **0.19.5+ per Minecraft 26.2**.
+1. Installa Fabric Loader **0.19.3+ per Minecraft 26.2**.
 2. Metti `spoticraft-26.2.jar` e **Fabric API per 26.2, versione 0.161.0+26.2 o successiva compatibile**
    nella cartella `mods` dell'istanza Minecraft.
 3. Apri Spotify desktop e avvia un brano, poi entra in un mondo Minecraft.

@@ -1,5 +1,17 @@
 # Verifica Spoticraft 26.2
 
+## Aggiornamento: Fabric Loader 0.19.3
+
+- Build Windows con Loader vincolato a 0.19.3: https://github.com/blxcksh2dow/Spoticraft/actions/runs/36235968172
+- Compilazione e test riusciti. Il vincolo Gradle `strictly` impedisce un upgrade
+  silenzioso del Loader durante la risoluzione delle dipendenze.
+- Il requisito nel manifest viene generato da `loader_version`, per mantenerlo
+  allineato alla dipendenza di compilazione.
+- JAR recuperato e verificato: manifest `fabricloader >=0.19.3`, Minecraft 26.2,
+  versione mod 26.2, classi compilate e archivio integro.
+- Fabric API resta 0.161.0+26.2. Prova interattiva in Minecraft ancora da eseguire.
+
+
 ## Aggiornamento: build Windows riuscita
 
 - Build GitHub Actions: https://github.com/blxcksh2dow/Spoticraft/actions/runs/36235520219

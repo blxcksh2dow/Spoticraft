@@ -5,11 +5,11 @@
 [Scarica direttamente da GitHub](https://github.com/blxcksh2dow/Spoticraft/raw/refs/heads/arena/01a0dd20-spoticraft/download/spoticraft-26.2.jar)
 
 Build e test riusciti su Windows con JDK 25:
-https://github.com/blxcksh2dow/Spoticraft/actions/runs/36235520219
+https://github.com/blxcksh2dow/Spoticraft/actions/runs/36235968172
 
 ## Installazione
 
-1. Installa Fabric Loader 0.19.5 o successivo per **Minecraft 26.2**.
+1. Installa Fabric Loader 0.19.3 o successivo per **Minecraft 26.2**.
 2. Copia **spoticraft-26.2.jar** nella cartella `mods` della tua istanza.
 3. Aggiungi **Fabric API 0.161.0+26.2** o successiva compatibile con Minecraft 26.2.
 4. Apri Spotify desktop su Windows 10/11 ed entra in un mondo.
@@ -26,5 +26,5 @@ nuova build. Il JAR non è incluso nello ZIP dei sorgenti: scaricalo separatamen
 SHA-256 della build verificata:
 
 ```
-c4098fd77ee5a58399e3b1d328b417cc9bc380ad11434d7bdba4db7624a84a90
+3768fb708bee24b271d558cb6955121ee026cc70643357e832c24bb1e1a23a7b
 ```
