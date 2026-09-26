@@ -5,10 +5,13 @@ $ErrorActionPreference = 'Stop'
 
 function Initialize-SpoticraftBridge([string]$ExtraTestSource = '') {
     Add-Type -AssemblyName System.Runtime.WindowsRuntime
-    $runtime = [System.Runtime.InteropServices.RuntimeEnvironment]::GetRuntimeDirectory()
     $references = @('System.dll', 'System.Core.dll', 'System.Runtime.WindowsRuntime.dll')
     foreach ($facade in @('System.Runtime.dll', 'System.Runtime.InteropServices.WindowsRuntime.dll', 'System.ObjectModel.dll', 'System.Threading.Tasks.dll')) {
-        $references += Join-Path $runtime "Facades\$facade"
+        # On ordinary Windows installations these facades live in the GAC, not
+        # the developer-only Framework/Facades directory. Resolve installed assemblies.
+        $assembly = [Reflection.Assembly]::LoadWithPartialName([IO.Path]::GetFileNameWithoutExtension($facade))
+        if ($null -eq $assembly) { throw "Required Windows .NET assembly not found: $facade" }
+        $references += $assembly.Location
     }
     $references += @(Get-ChildItem (Join-Path $env:SystemRoot 'System32\WinMetadata\*.winmd') | ForEach-Object { $_.FullName })
     $source = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'SpotifyBridge.cs'))
