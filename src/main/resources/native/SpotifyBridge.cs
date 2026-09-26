@@ -2,7 +2,9 @@
 // WinRT objects never cross the PowerShell boundary: only plain .NET DTOs do.
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Diagnostics;
+using System.Threading;
+using Windows.Foundation;
 using Windows.Media.Control;
 using Windows.Storage.Streams;
 
@@ -46,7 +48,7 @@ namespace Spoticraft.Native {
             return info != null && info.PlaybackStatus == GlobalSystemMediaTransportControlsSessionPlaybackStatus.Playing;
         }
         public Media ReadMedia() {
-            var properties = Bridge.Wait(session.TryGetMediaPropertiesAsync().AsTask());
+            var properties = Bridge.Wait(session.TryGetMediaPropertiesAsync());
             if (properties == null) throw new InvalidOperationException("Windows returned no media properties");
             var thumbnail = properties.Thumbnail;
             return new Media { Title = properties.Title, Artist = properties.Artist, Album = properties.AlbumTitle,
@@ -62,13 +64,26 @@ namespace Spoticraft.Native {
         private GlobalSystemMediaTransportControlsSessionManager manager;
         private string lastKey = "", cachedCover = "";
         private DateTime retryCoverAt = DateTime.MinValue;
-        public static T Wait<T>(Task<T> task) {
-            if (!task.Wait(5000)) throw new TimeoutException("Windows media API timed out");
-            return task.GetAwaiter().GetResult();
+        public static T Wait<T>(IAsyncOperation<T> operation) {
+            // Use the OS's split WinRT metadata directly. Framework AsTask extensions
+            // reference the merged SDK-only Windows.winmd, absent on end-user PCs.
+            var timer = Stopwatch.StartNew();
+            try {
+                while (operation.Status == AsyncStatus.Started) {
+                    if (timer.ElapsedMilliseconds >= 5000) {
+                        operation.Cancel();
+                        throw new TimeoutException("Windows media API timed out");
+                    }
+                    Thread.Sleep(10);
+                }
+                return operation.GetResults();
+            } finally {
+                try { operation.Close(); } catch { }
+            }
         }
         public Snapshot Poll() {
             try {
-                if (manager == null) manager = Wait(GlobalSystemMediaTransportControlsSessionManager.RequestAsync().AsTask());
+                if (manager == null) manager = Wait(GlobalSystemMediaTransportControlsSessionManager.RequestAsync());
                 var sessions = new List<ISession>();
                 foreach (var s in manager.GetSessions()) sessions.Add(new WindowsSession(s));
                 return PollSessions(sessions);
@@ -132,11 +147,11 @@ namespace Spoticraft.Native {
             IInputStream input = null;
             DataReader reader = null;
             try {
-                stream = Wait(thumbnail.OpenReadAsync().AsTask());
+                stream = Wait(thumbnail.OpenReadAsync());
                 if (stream.Size == 0 || stream.Size > 2097152) return "";
                 input = stream.GetInputStreamAt(0);
                 reader = new DataReader(input);
-                uint loaded = Wait(reader.LoadAsync((uint)stream.Size).AsTask());
+                uint loaded = Wait(reader.LoadAsync((uint)stream.Size));
                 var bytes = new byte[loaded];
                 reader.ReadBytes(bytes);
                 return Convert.ToBase64String(bytes);

@@ -33,7 +33,7 @@ namespace Spoticraft.Tests {
             using (var stream = new InMemoryRandomAccessStream()) {
                 using (var writer = new DataWriter(stream)) {
                     writer.WriteBytes(new byte[] { 1, 2, 3, 4, 5 });
-                    Bridge.Wait(writer.StoreAsync().AsTask());
+                    Bridge.Wait(writer.StoreAsync());
                     writer.DetachStream();
                 }
                 stream.Seek(0);

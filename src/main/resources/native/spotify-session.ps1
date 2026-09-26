@@ -4,8 +4,7 @@ param([switch]$LibraryOnly)
 $ErrorActionPreference = 'Stop'
 
 function Initialize-SpoticraftBridge([string]$ExtraTestSource = '') {
-    Add-Type -AssemblyName System.Runtime.WindowsRuntime
-    $references = @('System.dll', 'System.Core.dll', 'System.Runtime.WindowsRuntime.dll')
+    $references = @('System.dll', 'System.Core.dll')
     foreach ($facade in @('System.Runtime.dll', 'System.Runtime.InteropServices.WindowsRuntime.dll', 'System.ObjectModel.dll', 'System.Threading.Tasks.dll')) {
         # On ordinary Windows installations these facades live in the GAC, not
         # the developer-only Framework/Facades directory. Resolve installed assemblies.
