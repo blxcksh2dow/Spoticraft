@@ -27,8 +27,8 @@ try {
     $expected = [Convert]::ToBase64String($bytes)
     $diagnostics = New-Diagnostics
     $cover = Read-Cover $thumbnail $diagnostics
-    Check ($cover -eq $expected) 'Real WinRT thumbnail read returns the expected bytes'
-    Check ($diagnostics.Count -eq 0) 'Explicit IDisposable cleanup succeeds on real WinRT objects'
+    Write-Host ("::notice title=WinRT read probe::" + (@{ actual = $cover; expected = $expected; size = $stream.Size; stored = $stored; diagnostics = @($diagnostics.ToArray()) } | ConvertTo-Json -Compress -Depth 5))
+
 
     # Diagnose the OLD code without requiring a Spotify account or GUI session.
     $probeStream = Await ($thumbnail.OpenReadAsync()) ([Windows.Storage.Streams.IRandomAccessStreamWithContentType])
@@ -44,6 +44,8 @@ try {
         try { Close-WinRtObject $probeStream } catch { }
     }
 
+    Check ($cover -eq $expected) 'Real WinRT thumbnail read returns the expected bytes'
+    Check ($diagnostics.Count -eq 0) 'Explicit IDisposable cleanup succeeds on real WinRT objects'
     $savedClose = ${function:Close-WinRtObject}
     $script:closeCalls = 0
     function Close-WinRtObject($Value) {
