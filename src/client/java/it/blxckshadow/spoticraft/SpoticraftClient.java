@@ -66,7 +66,8 @@ public final class SpoticraftClient implements ClientModInitializer {
     }
     private void render(GuiGraphicsExtractor g) {
         Minecraft mc = Minecraft.getInstance();
-        if (!visible || mc.player == null || mc.options.hideGui) return;
+        // The CHAT HUD layer supplies its own visibility condition (including F1).
+        if (!visible || mc.player == null) return;
         Playback p = playback;
         int screenW = mc.getWindow().getGuiScaledWidth(), screenH = mc.getWindow().getGuiScaledHeight();
         int width = Math.min(config.width(), Math.max(1, screenW - 8));
