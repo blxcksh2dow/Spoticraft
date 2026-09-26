@@ -1,9 +1,30 @@
 # Verifica del rilevamento Defender — 26 settembre 2026
 
-> La segnalazione qui descritta riguarda la **build ritirata con script runtime**.
-> La nuova architettura precompilata ha un artefatto diverso; il suo rapporto
-> verificabile è in [download/spoticraft-26.2-verification.json](download/spoticraft-26.2-verification.json).
-> Questo non riclassifica il vecchio rilevamento come falso positivo.
+## Aggiornamento: rilevata anche la build precompilata
+
+Il nuovo screenshot dell'utente mostra **Trojan:Script/Wacatac.B!ml**, stato
+**Attivo**, alle 14:16 del 26 settembre 2026. Il webfile indica precisamente il
+commit `71b69f0f7fc3610c6dac2662cbfc25bb869a4811`: non è un link alla vecchia build.
+L'hash della copia del repository è
+`3f4e6d149184a01bde57c5b3e1026009bf886659099addffb0425b5fddd63bb4`.
+Non abbiamo un hash del file sul dispositivo, né evidenze che il JAR sia stato
+eseguito: la voce mostra un download e lo stato della rilevazione non risolta.
+
+**Il consiglio di installare la build sostitutiva è ritirato.** Il blocco di
+pubblicazione è stato ripristinato. Non si propone un'ulteriore variante del
+binario per aggirare il rilevamento, né modifiche alla configurazione antivirus.
+
+L'ipotesi che rimuovere PowerShell/compilazione runtime risolvesse il rilevamento
+non è confermata; sul PC dell'utente il rilevamento persiste senza quei componenti.
+L'esito pulito in CI rimane un dato limitato a quel runner, non un certificato.
+Non sappiamo quale caratteristica abbia generato il verdetto. Differenze di
+reputazione, protezione cloud e configurazione sono possibilità, non diagnosi.
+
+È necessaria una valutazione del campione da parte di Microsoft. Nessuna
+submission è stata effettuata in questa sessione. Non chiedere all'utente di
+ripristinare il file per fornirlo: esiste già una copia identificata nel progetto.
+Le sezioni successive sono la cronologia delle verifiche e delle ipotesi precedenti.
+
 
 ## Segnalazione
 

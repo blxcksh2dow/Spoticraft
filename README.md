@@ -1,5 +1,15 @@
 # Spoticraft · 26.2
 
+> **DISTRIBUZIONE SOSPESA — ANCHE LA BUILD PRECOMPILATA È STATA SEGNALATA.**
+> Il 26 settembre 2026 Defender sul PC dell'utente ha rilevato
+> `Trojan:Script/Wacatac.B!ml` anche sul JAR del commit `71b69f0`, mostrando
+> lo stato **Attivo**. Non installare, ripristinare o escludere dalla scansione
+> nessuna delle due build segnalate. Il precedente consiglio di installare
+> la nuova build è ritirato. Una scansione pulita in CI non risolve il caso.
+> Dettagli in `SECURITY-REVIEW.md`. Sorgenti e artefatti rimangono per l'analisi,
+> **non come raccomandazione d'uso**.
+
+
 Widget Spotify per **Minecraft Java 26.2**, **Fabric Loader 0.19.3+**,
 **Fabric API 0.161.0+26.2**, **Windows 10 (1809+) / Windows 11**.
 La versione della mod resta **26.2**.
@@ -34,31 +44,20 @@ PC.** Il componente non è firmato Authenticode. Se Defender/SmartScreen blocca
 anche la nuova build, fermati e condividi il nuovo rilevamento: non aggiungere
 esclusioni e non ripristinare un file segnalato.
 
-## Download e installazione
+## Download e installazione sospesi
 
-**[Scarica il nuovo JAR senza script runtime](https://github.com/blxcksh2dow/Spoticraft/raw/71b69f0f7fc3610c6dac2662cbfc25bb869a4811/download/spoticraft-26.2.jar)**
+Anche la build senza script runtime, pubblicata nel commit `71b69f0`, è stata
+segnalata da Defender sul PC dell'utente. **Non installarla.** Il rapporto
+`download/spoticraft-26.2-verification.json` registra soltanto il precedente
+esito sul runner CI: non è un certificato di sicurezza né annulla il rilevamento.
 
-Build pubblicata e verificata: https://github.com/blxcksh2dow/Spoticraft/actions/runs/36240553688
+La pubblicazione automatica è nuovamente bloccata da `download/SECURITY-HOLD.txt`.
+Gli artefatti storici non sono stati riclassificati come falsi positivi. Non è
+stata effettuata una submission a Microsoft in questa sessione. È necessaria
+una valutazione del campione da parte del fornitore antivirus, non un'altra
+variante del file per cercare di evitare il rilevamento.
 
-
-La cartella [`download`](download/LEGGIMI.md) contiene il JAR pubblicato e, per la
-nuova architettura, **`spoticraft-26.2-verification.json`** con hash, scansioni e link
-all'esecuzione CI. Prima di usare una build controlla che il rapporto sia presente
-e riporti `precompiled-windows-helper-no-runtime-scripts`.
-
-1. Chiudi Minecraft e rimuovi la vecchia copia di Spoticraft dalla cartella `mods`.
-2. Scarica il **nuovo JAR verificato** indicato nella cartella download. Non
-   recuperare il vecchio file bloccato da Defender; non tenere due copie della mod.
-3. Inserisci il JAR in `mods`, insieme a Fabric API per Minecraft 26.2.
-4. Avvia il profilo Fabric Loader **0.19.3 o successivo** per Minecraft 26.2.
-5. Apri **Spotify desktop** e riproduci un brano, poi entra in un mondo.
-
-Non serve eseguire i BAT, il programma `.exe` manualmente o un installer della mod.
-L'helper viene estratto in `config/spoticraft/bridge/<sha256>/`. I vecchi file
-`spotify-session.ps1` e `SpotifyBridge.cs` generati in `config/spoticraft/` vengono
-rimossi, se possibile, e **non vengono mai eseguiti** dalla nuova versione.
-
-Il codice e le build sono sul branch **`arena/01a0dd20-spoticraft`**, non in `main`.
+Le descrizioni tecniche seguenti restano disponibili per l'analisi dei sorgenti.
 
 ## Widget
 

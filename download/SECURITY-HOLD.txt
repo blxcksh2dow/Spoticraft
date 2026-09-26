@@ -1,0 +1,12 @@
+DISTRIBUZIONE NUOVAMENTE SOSPESA — 26 settembre 2026
+
+Defender ha segnalato Trojan:Script/Wacatac.B!ml anche sulla nuova build senza
+script runtime (commit 71b69f0), con stato Attivo sul PC dell'utente.
+SHA-256 campione del repository:
+3f4e6d149184a01bde57c5b3e1026009bf886659099addffb0425b5fddd63bb4
+
+Non pubblicare o raccomandare ulteriori build finché la segnalazione non è
+chiarita. Non cambiare nome, contenitore, packing o offuscamento per cercare
+di superare l'antivirus. Servono valutazione del campione e diagnosi verificabile.
+Il precedente esito pulito sul runner CI non annulla questa segnalazione.
+Non installare né ripristinare i campioni segnalati, non aggiungere esclusioni.
