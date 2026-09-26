@@ -20,6 +20,9 @@ jobs:
         with:
           distribution: temurin
           java-version: '25'
+      - name: Preflight native compiler and regression tests
+        shell: powershell
+        run: ./scripts/build-native.ps1 -RunTests
       - name: Compile and test
         shell: pwsh
         run: |
