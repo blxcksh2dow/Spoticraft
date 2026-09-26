@@ -12,6 +12,7 @@ namespace Spoticraft.Native {
     public sealed class Diagnostic {
         public string stage, type, message;
         public int hresult;
+        public Diagnostic() { }
         public Diagnostic(string stage, Exception error) {
             Exception cause = error.GetBaseException();
             this.stage = stage; type = cause.GetType().FullName;
