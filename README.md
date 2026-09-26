@@ -1,122 +1,86 @@
 # Spoticraft · 26.2
 
-> **AVVISO SICUREZZA — non installare il JAR attuale.**
-> Microsoft Defender ha segnalato `Trojan:Script/Wacatac.B!ml` sul download della
-> build WinRT (`SHA-256 d242a29429aa2b2547bc701052b1807927ab666fbe25b25285053ee4ceb3f313`).
-> Il rilevamento è in verifica: **non è stato accertato un falso positivo**.
-> Non ripristinare il file, non disabilitare Defender e non aggiungere esclusioni.
-> I link e gli artefatti sottostanti identificano la build segnalata, non una
-> versione raccomandata per l'installazione. Anche ricompilarla non certifica la sicurezza.
-> Esiti e limiti delle verifiche: [rapporto di sicurezza](SECURITY-REVIEW.md).
+Widget Spotify per **Minecraft Java 26.2**, **Fabric Loader 0.19.3+**,
+**Fabric API 0.161.0+26.2**, **Windows 10 (1809+) / Windows 11**.
+La versione della mod resta **26.2**.
 
+## Nuova architettura: niente script durante il gioco
 
-Mod **client Fabric**, versione **26.2**, destinata a **Minecraft Java 26.2** e
-**Windows 10 (1809+) / Windows 11**, con Spotify desktop (classico o Microsoft Store).
-Nessun account Spotify da collegare alla mod, Client ID o token richiesto.
+La precedente build con PowerShell/compilazione C# in memoria è stata segnalata
+come `Trojan:Script/Wacatac.B!ml` da Defender sul PC di un utente. **Non ripristinare
+quella build dalla quarantena. Il rilevamento non è stato certificato come falso positivo.**
 
-## Scarica il JAR compilato
+La nuova implementazione **elimina** quel meccanismo, non lo nasconde:
 
-**[Download diretto Spoticraft 26.2](https://github.com/blxcksh2dow/Spoticraft/raw/refs/heads/arena/01a0dd20-spoticraft/download/spoticraft-26.2.jar)**
+- Nessun avvio di PowerShell, nessun `ExecutionPolicy Bypass` durante il gioco.
+- Nessun compilatore, sorgente C#, BAT o script contenuto nel JAR installabile.
+- Un piccolo **`Spoticraft.Bridge.exe` precompilato** è incluso nel JAR. È un
+  programma .NET Framework di sola lettura, senza rete, installazione, elevazione
+  o ricezione di comandi. Non esegue script e non scarica altro codice.
+- Il sorgente è in [`native/src`](native/src). Il componente viene compilato nella
+  build Windows e dialoga con Java solo attraverso stdout JSON.
+- L'helper richiede il .NET Framework di Windows (4.8 consigliato, normalmente
+  presente sui sistemi aggiornati), non .NET SDK, PowerShell o Visual Studio all'avvio.
+- Java verifica lo SHA-256 del componente prima dell'esecuzione. Se il file è
+  alterato o il sistema ne impedisce l'avvio, si ferma senza aggirare la protezione.
+- Copertine, titolo, artista e posizione sono letti tramite le API Windows GSMTC;
+  non sono necessari login Spotify, cookie, password o token.
 
-Il file è anche in **`download/spoticraft-26.2.jar`** nel repository.
-Non serve eseguire i BAT per installare questa build: copia il JAR nella cartella
-`mods` insieme a Fabric API per Minecraft 26.2.
+I test e le scansioni della **build preliminare senza script** sono riusciti:
+https://github.com/blxcksh2dow/Spoticraft/actions/runs/36240369093
 
-> **Stato: compilazione e test riusciti su Windows con JDK 25 tramite GitHub Actions.**
-> [Build verificata](https://github.com/blxcksh2dow/Spoticraft/actions/runs/36238976276).
-> Ricompilata con dipendenza vincolata a **Fabric Loader 0.19.3**; requisito minimo
-> nel JAR: `>=0.19.3`. Sostituisci il vecchio JAR, senza conservarne due copie.
-> Corretto il bridge Windows: accesso WinRT tipizzato in C#, errori opzionali isolati
-> e diagnostica in `logs/latest.log`. Superati 18 controlli nativi su Windows
-> (inclusi stream WinRT reali) e un test JSON, oltre ai test Java.
-> Corretto il riferimento non valido a `Options.hideGui` per Minecraft 26.2.
-> Verificati integrità del JAR, classi, risorse e metadati. La prova in gioco
-> con Spotify resta da eseguire. Il progetto e il JAR sono pubblicati nel branch
-> `arena/01a0dd20-spoticraft`, non in `main`.
+**Una scansione pulita non è una garanzia di sicurezza né di accettazione su ogni
+PC.** Il componente non è firmato Authenticode. Se Defender/SmartScreen blocca
+anche la nuova build, fermati e condividi il nuovo rilevamento: non aggiungere
+esclusioni e non ripristinare un file segnalato.
+
+## Download e installazione
+
+La cartella [`download`](download/LEGGIMI.md) contiene il JAR pubblicato e, per la
+nuova architettura, **`spoticraft-26.2-verification.json`** con hash, scansioni e link
+all'esecuzione CI. Prima di usare una build controlla che il rapporto sia presente
+e riporti `precompiled-windows-helper-no-runtime-scripts`.
+
+1. Chiudi Minecraft e rimuovi la vecchia copia di Spoticraft dalla cartella `mods`.
+2. Scarica il **nuovo JAR verificato** indicato nella cartella download. Non
+   recuperare il vecchio file bloccato da Defender; non tenere due copie della mod.
+3. Inserisci il JAR in `mods`, insieme a Fabric API per Minecraft 26.2.
+4. Avvia il profilo Fabric Loader **0.19.3 o successivo** per Minecraft 26.2.
+5. Apri **Spotify desktop** e riproduci un brano, poi entra in un mondo.
+
+Non serve eseguire i BAT, il programma `.exe` manualmente o un installer della mod.
+L'helper viene estratto in `config/spoticraft/bridge/<sha256>/`. I vecchi file
+`spotify-session.ps1` e `SpotifyBridge.cs` generati in `config/spoticraft/` vengono
+rimossi, se possibile, e **non vengono mai eseguiti** dalla nuova versione.
+
+Il codice e le build sono sul branch **`arena/01a0dd20-spoticraft`**, non in `main`.
 
 ## Widget
 
 Posizione predefinita: **in alto a sinistra**, coordinate GUI `(8, 8)`.
 
-- Titolo, artista e copertina del brano fornita dalla sessione Spotify.
-- Tempo trascorso, durata totale e barra di avanzamento.
-- Indicazione riproduzione/pausa; avanzamento basato sul tempo reale, non sui tick.
-- **Esattamente due righe** sotto il brano: riga attuale e successiva per i testi LRC.
-- Se esiste solo testo semplice, due righe con scorrimento automatico ogni 6 secondi,
-  sospeso durante la pausa, e scorrimento manuale. Non viene simulata una falsa
-  sincronizzazione temporale; i versi lunghi vengono troncati alla larghezza del widget.
-- Stati espliciti per Spotify chiuso, assenza di testo, brano strumentale, rete assente
-  o API Windows non disponibili. Le due righe rimangono riservate durante l'ascolto.
-- Copertina pixel-art 48×48; icona musicale se assente. Non è un'immagine generata:
-  viene letta dalla miniatura che Spotify espone a Windows.
-
-## Ottenere il JAR con doppio clic (Windows x64)
-
-1. Scarica `download/spoticraft-26.2-source.zip` ed **estrai tutto lo ZIP**.
-2. Apri **`OTTIENI-JAR.bat`** nella cartella estratta, non dentro lo ZIP.
-3. Attendi: lo script usa un JDK 25 esistente oppure scarica **Eclipse Temurin 25**
-   portatile in `.tools/jdk-25`, controllandone lo SHA-256 tramite i metadati HTTPS
-   di Adoptium. Poi esegue la build e i test.
-4. **Solo se la build riesce**, apre Esplora file su
-   **`download/spoticraft-26.2.jar`**, pronto da copiare in `mods`.
-
-Questa procedura serve a ricompilare il sorgente sul tuo PC; per il JAR già
-compilato usa invece il link in cima alla pagina. Non richiede installare Java manualmente o diritti amministratore e
-non modifica permanentemente `JAVA_HOME`, `PATH` o la policy PowerShell.
-Il download automatico del JDK supporta Windows x64; su altre architetture va
-fornito un JDK 25 compatibile tramite `JAVA_HOME`.
-
-Servono Internet, spazio per le dipendenze e accesso a Adoptium, ai suoi mirror
-(inclusi i download GitHub), Gradle, Fabric, Mojang e Maven Central.
-Le richieste sono solo download: **nessun sorgente viene caricato su GitHub**.
-Gli strumenti rimangono in `.tools` e nella cache Gradle e vengono riutilizzati.
-Se rete, test o compilazione falliscono, viene mostrato un errore: nessun JAR
-fittizio viene generato. Anche questa procedura **non è stata eseguita su Windows**
-in questo ambiente.
-
-## Compilare e ottenere il JAR su Windows
-
-1. Installa un **JDK 25**, per esempio Eclipse Temurin, e configura `JAVA_HOME`.
-   Il Java incorporato nel launcher Minecraft non è necessariamente accessibile al terminale.
-2. Scarica/copia tutto il progetto e apri **`CREA-MOD.bat`**.
-3. Attendi il download delle dipendenze, i test e la compilazione (serve Internet).
-4. Se il comando termina con successo trovi **`download/spoticraft-26.2.jar`**.
-
-Oppure da PowerShell, nella cartella del progetto:
-
-```powershell
-.\gradlew.bat --no-daemon clean downloadMod
-```
-
-La task `downloadMod` dipende da `build`: non copia un JAR se i test o la build
-falliscono. Non pubblica niente su GitHub o repository Maven.
-Il wrapper Gradle **9.5.1** è incluso; usa il plugin Fabric Loom del template
-ufficiale 26.2 (**1.17-SNAPSHOT**), Fabric Loader **0.19.3** e Fabric API
-**0.161.0+26.2**. Loom è uno snapshot, quindi la risoluzione del plugin può
-cambiare a monte. Non si usano Yarn o rimappature obsolete per questa versione.
-
-## Installazione
-
-1. Installa Fabric Loader **0.19.3+ per Minecraft 26.2**.
-2. Metti `spoticraft-26.2.jar` e **Fabric API per 26.2, versione 0.161.0+26.2 o successiva compatibile**
-   nella cartella `mods` dell'istanza Minecraft.
-3. Apri Spotify desktop e avvia un brano, poi entra in un mondo Minecraft.
-4. Non installare la mod sul server: funziona solo sul client.
-
-## Comandi e impostazioni
-
-Tutti i tasti sono rimappabili in **Opzioni → Comandi → Assegnazione tasti → Spoticraft**:
+- Titolo e artista, miniatura autentica del brano (pixel-art 48×48).
+- Durata, tempo trascorso e barra di avanzamento; interpolazione indipendente dai tick.
+- Stato riproduzione/pausa e messaggio quando Spotify è chiuso.
+- **Due righe riservate al testo**: attuale + successiva quando LRCLIB restituisce LRC.
+- Se è disponibile soltanto testo semplice, scorrimento automatico ogni 6 secondi
+  durante la riproduzione e scorrimento manuale. Non viene inventata una sincronizzazione.
+- Copertina o timeline mancanti non nascondono più titolo e artista.
+- Stati distinti per testi assenti, strumentali, offline ed errori delle API Windows.
 
 | Tasto predefinito | Funzione |
 | --- | --- |
-| F8 | Mostra/nascondi il widget per la sessione corrente |
+| F8 | Mostra/nascondi il widget per la sessione |
 | `]` | Due righe successive del testo non sincronizzato |
 | `[` | Due righe precedenti del testo non sincronizzato |
 
-Per tastiere italiane è consigliabile rimappare i due tasti delle parentesi.
-F1 nasconde anche il widget. Il widget non compare nel menu iniziale.
+Tasti rimappabili in **Opzioni → Comandi → Assegnazione tasti → Spoticraft**;
+su tastiere italiane è consigliabile rimappare le parentesi. F1 nasconde l'HUD.
+Il widget non compare nel menu iniziale.
 
-Al primo avvio viene creato `config/spoticraft/widget.properties`:
+## Configurazione e privacy
+
+`config/spoticraft/widget.properties`, creato al primo avvio:
 
 ```properties
 x=8
@@ -127,95 +91,56 @@ lyricsEnabled=true
 plainScrollSeconds=6
 ```
 
-Modifica il file a gioco chiuso. `x` e `y` sono coordinate GUI (quindi rispettano
-la scala GUI di Minecraft); la posizione viene limitata alla finestra.
-`plainScrollSeconds=0` lascia solo lo scorrimento manuale.
-`lyricsEnabled=false` disabilita tutte le richieste di testi; copertina e playback
-restano locali. `enabled=false` imposta il widget inizialmente nascosto, ma F8
-può mostrarlo: **non** disattiva il servizio testi.
+Modifica a gioco chiuso. Coordinate e larghezza seguono la scala GUI e vengono
+limitate alla finestra. `plainScrollSeconds=0` lascia solo lo scorrimento manuale.
+`enabled=false` nasconde inizialmente il widget ma non ferma il servizio testi.
 
-## Come funziona / privacy
+**Con `lyricsEnabled=true`, titolo, artista, album e durata vengono inviati a
+`https://lrclib.net/api/get`**, che vede anche l'IP. `lyricsEnabled=false` disabilita
+quelle richieste. La cache testi resta solo in memoria, con limite di 64 brani.
+Il componente Windows non effettua richieste di rete. Non ci sono porte in
+ascolto, server locali, credenziali memorizzate o cronologia brani su disco.
 
-- Java avvia **un solo processo Windows PowerShell 5.1**, senza profilo né finestra
-  interattiva, usando le API Windows **Global System Media Transport Controls**.
-- Il bridge è incluso in `src/main/resources/native/spotify-session.ps1` e
-  `SpotifyBridge.cs`. Entrambi vengono copiati/aggiornati in `config/spoticraft/`
-  all'avvio. PowerShell compila il piccolo helper C# in memoria con il compilatore
-  .NET Framework e i metadati WinRT già presenti in Windows; non serve installare
-  Visual Studio, Windows SDK o .NET SDK. Gli oggetti WinRT restano in C# e soltanto
-  semplici dati .NET vengono serializzati in JSON UTF-8 verso Java.
-  È di sola lettura: non invia comandi di riproduzione e non legge password/cookie.
-- `-ExecutionPolicy Bypass` vale per il solo processo figlio; la policy permanente
-  di Windows non viene modificata. Policy aziendali possono comunque impedirne l'avvio.
-- Non ci sono server HTTP locali, porte aperte, eseguibili nativi scaricati o token.
-- Se i testi sono abilitati, **titolo, artista, album e durata sono inviati a
-  `https://lrclib.net/api/get`**. LRCLIB vede inoltre l'IP della connessione.
-  Nessun testo viene estratto da Spotify. La disponibilità non è garantita.
-- Cache testi solo in memoria (massimo 64 brani), timeout e tentativi distanziati;
-  nessuna cronologia di ascolto scritta su disco. Il processo Windows viene
-  chiuso all'uscita dal client e riavviato se si blocca.
+L'eseguibile è avviato senza shell e viene chiuso all'uscita del client; termina
+anche quando la pipe stdout si chiude. Dopo ripetuti arresti Java smette di
+riavviarlo. Nessuna ricreazione automatica in ciclo di file rimossi dall'antivirus.
 
-## Limiti e compatibilità da verificare sul PC
+## Diagnostica e limiti
 
-- **Compilato e testato con JUnit su un runner Windows**, ma non ancora provato
-  dentro Minecraft né con una sessione Spotify reale.
-- Spotify Web Player non è supportato: viene selezionata solo una sessione con
-  identificatore Spotify, non il browser o qualunque altro lettore multimediale.
-- Alcune versioni di Spotify non espongono durata, posizione, copertina o album
-  in GSMTC. Se Windows non li fornisce, la mod non può ricostruirli in modo affidabile:
-  la durata è `--:--`, la barra vuota o la copertina sostituita dall'icona.
-- Il polling avviene circa ogni secondo; cambio brano, seek e pausa possono avere
-  un ritardo. La posizione viene interpolata tra gli aggiornamenti Windows.
-- Testi non trovati, brani locali, podcast, pubblicità e versioni live/remix possono
-  non avere una corrispondenza in LRCLIB. Nessuna ricerca approssimata che rischi di
-  mostrare il testo di un altro brano.
-- Testo e metadati sono mostrati in italiano per gli stati del widget; i nomi dei
-  tasti hanno traduzioni italiana e inglese.
+- Gli errori sono in `logs/latest.log`, nelle righe **`Spoticraft Windows bridge`**,
+  con fase/HRESULT. Errori ripetuti sono limitati a uno al minuto per tipo.
+- Condividi solo le righe pertinenti, controllando eventuali informazioni personali.
+- Windows può non esporre durata, copertina o posizione per certe versioni di
+  Spotify: in quel caso compaiono placeholder, non dati inventati.
+- Spotify Web Player, Linux e macOS non sono supportati da questo bridge.
+- Testi live/remix/podcast/pubblicità possono non essere disponibili in LRCLIB;
+  i versi lunghi vengono troncati alla larghezza del widget.
+- Il polling è circa ogni secondo. Pausa, seek e cambio brano possono avere un ritardo.
+- Test nativi e Java su Windows non sostituiscono una prova interattiva completa
+  con Minecraft/Spotify sul PC dell'utente.
 
-## Se Spotify non viene letto
+## Sorgenti e compilazione (solo sviluppatori)
 
-La vecchia build poteva mostrare **"Sessione Spotify non disponibile"** anche
-quando Spotify era rilevato: PowerShell riceveva alcuni risultati WinRT come
-`System.__ComObject`, senza accesso corretto a proprietà/metodi delle interfacce.
-Una lettura/chiusura fallita dello stream della copertina poteva finire nel catch
-che invalidava l'intera sessione. Il test su Windows ha riprodotto il problema
-COM con uno stream WinRT reale. Senza il vecchio log del PC non è possibile
-attribuire con certezza ogni caso segnalato a questo solo errore.
-
-Il nuovo bridge usa chiamate C# tipizzate. Se copertina o timeline falliscono,
-conserva titolo e artista; se falliscono i metadati essenziali, segnala la fase
-precisa. I dettagli compaiono in **`logs/latest.log`**, nelle righe contenenti
-**`Spoticraft Windows bridge`**, con fase, tipo eccezione e HRESULT.
-Messaggi ripetuti vengono limitati a uno al minuto per tipo di errore; non
-vengono scritti deliberatamente titolo, artista o immagine nei messaggi diagnostici.
-
-Chiudi Minecraft, sostituisci il vecchio JAR e riavvia: i due file bridge vengono
-aggiornati automaticamente, senza dover cancellare la configurazione.
-Se il problema persiste, condividi solo quelle righe di log (controllando che
-non contengano informazioni personali), non l'intero log del client.
-
-## Verifiche
+Serve **Windows**, JDK 25, .NET Framework e accesso ai repository delle dipendenze.
+Il wrapper Gradle 9.5.1 è incluso; Loom segue il template Fabric 26.2.
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\test-windows-bridge.ps1
-.\gradlew.bat test
-.\gradlew.bat runClient
+.\gradlew.bat --no-daemon clean downloadMod
+powershell.exe -NoProfile -File .\scripts\test-windows-bridge.ps1
+python scripts/verify-artifact.py
 ```
 
-Test JUnit inclusi per parsing LRC, tag ripetuti, offset, Unicode, seek indietro,
-righe vuote, fallback testo semplice, interpolazione/pausa/limiti del playback e
-configurazione. **Eseguiti con successo su GitHub Actions Windows**; la sandbox
-locale resta senza Java e con accesso limitato ai server delle dipendenze.
+`CREA-MOD.bat` e `OTTIENI-JAR.bat` restano strumenti di sviluppo: non sono inclusi
+nel JAR né necessari per installarlo. I loro script e `build-native.ps1` usano
+PowerShell **soltanto durante la compilazione**, non nel runtime della mod.
+La task `compileNativeBridge` compila helper e test C# sul disco di build; il JAR
+include soltanto l'eseguibile di produzione e il checksum. Nessun offuscamento.
 
-Vedi [`TESTING.md`](TESTING.md) per la checklist Windows e lo stato delle verifiche.
+La CI esegue test Java, test WinRT (anche con stream reali), avvio del vero helper,
+controllo del JAR senza script e scansioni Defender separate di helper e JAR.
+Se scansione, test o verifiche falliscono, non pubblica il risultato. I rapporti
+si riferiscono sempre agli hash effettivi dell'artefatto generato in quell'esecuzione.
 
-## Riferimenti tecnici
-
-- [Template ufficiale Fabric 26.2](https://github.com/FabricMC/fabric-example-mod/tree/26.2)
-- [HUD Fabric 26.2](https://docs.fabricmc.net/develop/rendering/hud)
-- [GUI / GuiGraphicsExtractor](https://docs.fabricmc.net/develop/rendering/gui-graphics)
-- [GSMTC Microsoft](https://learn.microsoft.com/en-us/uwp/api/windows.media.control.globalsystemmediatransportcontrolssessionmanager)
-- [API LRCLIB](https://lrclib.net/docs)
-
-Progetto non affiliato a Spotify, Mojang o Microsoft. Copertine e testi appartengono
-ai rispettivi titolari e non sono inclusi nel repository.
+Vedi [`TESTING.md`](TESTING.md) e [`SECURITY-REVIEW.md`](SECURITY-REVIEW.md).
+Progetto non affiliato a Spotify, Mojang o Microsoft. Testi e immagini appartengono
+ai rispettivi titolari e non sono inclusi nei sorgenti.

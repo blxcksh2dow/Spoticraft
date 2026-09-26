@@ -5,6 +5,7 @@ from pathlib import Path
 import zipfile
 
 artifact = Path('download/spoticraft-26.2.jar')
+assert hashlib.sha256(artifact.read_bytes()).hexdigest() != 'd242a29429aa2b2547bc701052b1807927ab666fbe25b25285053ee4ceb3f313', 'Retired reported artifact must not be republished'
 with zipfile.ZipFile(artifact) as jar:
     assert jar.testzip() is None
     names = jar.namelist()

@@ -54,3 +54,36 @@ ufficiale: https://www.microsoft.com/en-us/wdsi/filesubmission
 essere fornito dal manutentore usando la copia già disponibile; l'utente non deve
 ripristinarlo dalla quarantena né scaricarlo nuovamente per effettuare la verifica.
 Fino al chiarimento, lasciare il file rimosso e non eseguire la mod o i suoi BAT.
+
+## Nuova architettura: componente precompilato
+
+La segnalazione originaria **resta irrisolta**; non si dichiara un falso positivo.
+La sostituzione è un cambiamento architetturale del software legittimo, non un
+aggiramento di Defender. Non vengono usati offuscamento, packer, esclusioni,
+modifiche alla protezione o occultamento dell'eseguibile.
+
+La build preliminare della nuova architettura ha completato:
+https://github.com/blxcksh2dow/Spoticraft/actions/runs/36240369093
+
+- Test Java (inclusa verifica dell'integrità del componente estratto).
+- Test C# con oggetti WinRT reali e sessioni simulate.
+- Avvio del vero eseguibile e lettura delle sessioni Windows con risposta JSON.
+- Verifica JAR senza script, sorgenti C#, shell o compilatore runtime.
+- Scansioni separate del componente precompilato e del JAR: nessun rilevamento
+  sul runner con firme Defender 1.459.410.0.
+
+Il blocco globale di pubblicazione è rimosso **solo per la nuova architettura**:
+la pipeline rifiuta esplicitamente l'hash del vecchio JAR e verifica il contenuto,
+poi richiede test e scansioni ad ogni build prima di pubblicare. I nuovi hash e
+rapporti sono in `download/spoticraft-26.2-verification.json`; non riutilizzare
+l'esito di una build per certificare un'altra build.
+
+Il componente è compilato prima della distribuzione, non sul PC durante il gioco.
+Java verifica il suo hash e lo avvia senza shell con i normali permessi utente.
+In caso di blocco dell'avvio non tenta di modificare le protezioni o ricreare il
+file in ciclo. Si interrompe e scrive un errore nel log.
+
+Restano i limiti: eseguibile non firmato Authenticode, assenza di una valutazione
+Microsoft del vecchio campione, possibili differenze di reputazione/protezione cloud
+tra dispositivi, mancata prova interattiva completa sulla macchina dell'utente.
+Se la nuova build è segnalata, non ignorare il rilevamento: serve una nuova analisi.

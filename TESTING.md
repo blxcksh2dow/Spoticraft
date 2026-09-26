@@ -1,5 +1,23 @@
 # Verifica Spoticraft 26.2
 
+## Nuovo bridge precompilato — 26 settembre 2026
+
+Verifica preliminare riuscita:
+https://github.com/blxcksh2dow/Spoticraft/actions/runs/36240369093
+
+- Compilazione C# anticipata: `native/src` -> `Spoticraft.Bridge.exe`.
+- 18 controlli nativi, round-trip JSON del serializer di produzione, 20 test Java.
+- Smoke test del vero `.exe`: avvio senza shell, accesso alle sessioni Windows,
+  output JSON e uscita con `--once`.
+- Packaging: nessuno script o sorgente C# nel JAR; hash del binario verificato.
+- Scansioni Defender del componente e del JAR senza rilevamenti su quel runner.
+- Restano da provare riproduzione Spotify reale, interfaccia Minecraft e
+  accettazione del download/esecuzione sul PC dell'utente.
+
+Le sezioni seguenti sono **storiche** e descrivono le build precedenti, non
+l'architettura corrente. La versione PowerShell è stata ritirata.
+
+
 ## Correzione bridge Spotify / oggetti COM
 
 - Build riuscita: https://github.com/blxcksh2dow/Spoticraft/actions/runs/36238976276

@@ -1,4 +1,4 @@
-name: Build Spoticraft 26.2
+name: Build, test and scan Spoticraft 26.2
 on:
   push:
     branches: [arena/01a0dd20-spoticraft]
