@@ -1,6 +1,8 @@
 package it.blxckshadow.spoticraft;
 
 import com.google.gson.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -12,6 +14,8 @@ import java.util.function.Consumer;
 
 /** A single supervised, read-only PowerShell process; no listening ports or credentials. */
 public final class WindowsSpotify implements AutoCloseable {
+    private static final Logger LOGGER = LoggerFactory.getLogger("spoticraft");
+    private final Map<String, Long> diagnosticTimes = new LinkedHashMap<>();
     private final Consumer<Playback> sink;
     private final ExecutorService worker = Executors.newSingleThreadExecutor(r -> {
         Thread t = new Thread(r, "Spoticraft-Windows"); t.setDaemon(true); return t;
@@ -75,6 +79,7 @@ public final class WindowsSpotify implements AutoCloseable {
         catch (Exception e) { sink.accept(Playback.idle("Bridge Windows non disponibile")); }
     }
     private Playback decode(JsonObject json) throws IOException {
+        logDiagnostics(json);
         if (!json.has("available") || !json.get("available").getAsBoolean()) {
             lastCover = ""; pixels = null;
             return Playback.idle(string(json, "status"));
@@ -114,6 +119,28 @@ public final class WindowsSpotify implements AutoCloseable {
         double duration = finite(json, "duration"), position = finite(json, "position");
         return new Playback(string(json, "title"), string(json, "artist"), string(json, "album"), duration,
                 Math.min(position, duration), json.get("playing").getAsBoolean(), System.nanoTime(), pixels, "");
+    }
+    private void logDiagnostics(JsonObject json) {
+        if (!json.has("diagnostics") || !json.get("diagnostics").isJsonArray()) return;
+        for (JsonElement element : json.getAsJsonArray("diagnostics")) {
+            if (!element.isJsonObject()) continue;
+            JsonObject d = element.getAsJsonObject();
+            String stage = diagnosticText(d, "stage"), type = diagnosticText(d, "type");
+            String code = diagnosticText(d, "hresult");
+            String key = stage + ":" + type + ":" + code;
+            long now = System.nanoTime();
+            Long previous = diagnosticTimes.get(key);
+            if (previous != null && now - previous < TimeUnit.SECONDS.toNanos(60)) continue;
+            if (diagnosticTimes.size() >= 32) diagnosticTimes.remove(diagnosticTimes.keySet().iterator().next());
+            diagnosticTimes.put(key, now);
+            LOGGER.warn("Spoticraft Windows bridge [{}] {} (HRESULT {}): {}",
+                    stage, type, code, diagnosticText(d, "message"));
+        }
+    }
+    private static String diagnosticText(JsonObject object, String key) {
+        if (!object.has(key) || !object.get(key).isJsonPrimitive()) return "";
+        String value = object.get(key).getAsString().replaceAll("[\\p{Cc}§]", " ");
+        return value.substring(0, Math.min(value.length(), 500));
     }
     private static double finite(JsonObject o, String key) {
         double n = o.has(key) ? o.get(key).getAsDouble() : 0;

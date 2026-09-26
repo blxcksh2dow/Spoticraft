@@ -18,6 +18,9 @@ jobs:
         with:
           distribution: temurin
           java-version: '25'
+      - name: Test Windows media bridge on PowerShell 5.1
+        shell: powershell
+        run: ./scripts/test-windows-bridge.ps1
       - name: Compile and test
         shell: pwsh
         run: |
