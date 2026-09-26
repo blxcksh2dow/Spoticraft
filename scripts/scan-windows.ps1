@@ -1,14 +1,15 @@
 # Scan without executing the JAR. A missing/inactive scanner is NOT a clean result.
 param([string]$Artifact = 'download\spoticraft-26.2.jar', [string]$ReportPath = 'build\defender-scan-report.json')
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'security\defender-validation.ps1')
 try {
     $path = (Resolve-Path -LiteralPath $Artifact).Path
     $hash = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash
     Write-Host "Artifact SHA-256: $hash"
     $status = Get-MpComputerStatus
-    if (-not $status.AMServiceEnabled -or -not $status.AntivirusEnabled) {
-        throw 'Defender is not active on this runner. No security verdict is available.'
-    }
+    $preferences = Get-MpPreference
+    $issues = @(Get-DefenderValidationIssues $status $preferences)
+    if ($issues.Count -gt 0) { throw "Scan environment is insufficient: $($issues -join '; '). No clean verdict." }
     Update-MpSignature
     $status = Get-MpComputerStatus
     Write-Host "Defender engine: $($status.AMEngineVersion); signatures: $($status.AntivirusSignatureVersion); updated: $($status.AntivirusSignatureLastUpdated)"
@@ -16,9 +17,17 @@ try {
         Sort-Object LastWriteTime -Descending | Select-Object -First 1
     $executable = if ($scanner) { $scanner.FullName } else { Join-Path $env:ProgramFiles 'Windows Defender\MpCmdRun.exe' }
     if (-not (Test-Path -LiteralPath $executable)) { throw 'Microsoft Defender scanner is unavailable.' }
+    $cloud = & $executable -ValidateMapsConnection 2>&1 | Out-String
+    if ($LASTEXITCODE -ne 0) { throw "MAPS connectivity could not be verified: $cloud" }
+    $exclusion = & $executable -CheckExclusion -Path $path 2>&1 | Out-String
+    $exclusionCode = $LASTEXITCODE
+    if (-not (Test-DefenderNotExcluded $exclusionCode $exclusion)) { throw "Scan exclusion status is not acceptable: $exclusion" }
     $started = Get-Date
-    & $executable -Scan -ScanType 3 -File $path 2>&1 | Tee-Object -FilePath defender-scan.log
+    $scanOutput = & $executable -Scan -ScanType 3 -File $path 2>&1 | Out-String
     $code = $LASTEXITCODE
+    [IO.File]::WriteAllText((Join-Path (Get-Location) 'defender-scan.log'), $scanOutput)
+    Write-Host $scanOutput
+    if (-not (Test-DefenderCompletedScan $code $scanOutput)) { throw 'Scan was skipped, incomplete, failed or unrecognized. No clean verdict.' }
     # MpCmdRun can return zero after successful remediation: check detections too.
     $detected = @(Get-MpThreatDetection | Where-Object {
         $_.InitialDetectionTime -ge $started.AddSeconds(-5) -or
@@ -32,7 +41,8 @@ try {
     $report = @{
         fileName = [IO.Path]::GetFileName($path); sha256 = $hash.ToLowerInvariant()
         engine = $status.AMEngineVersion; signatures = $status.AntivirusSignatureVersion
-        scannedUtc = [DateTime]::UtcNow.ToString('o'); result = 'no-detection-on-ci-runner'
+        scannedUtc = [DateTime]::UtcNow.ToString('o'); result = 'no-detection-observed-in-completed-ci-scan'
+        scanCompleted = $true; protectionVerified = $true; cloudConnectionVerified = $true; exclusionChecked = $true
         runId = $env:GITHUB_RUN_ID
     }
     $fullReport = [IO.Path]::GetFullPath($ReportPath)

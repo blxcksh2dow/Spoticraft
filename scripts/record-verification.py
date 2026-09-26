@@ -12,7 +12,8 @@ assert jar_report['sha256'] == hashlib.sha256(jar.read_bytes()).hexdigest()
 with zipfile.ZipFile(jar) as archive:
     assert helper_report['sha256'] == hashlib.sha256(archive.read('native/Spoticraft.Bridge.exe')).hexdigest()
 for report in [helper_report, jar_report]:
-    assert report['result'] == 'no-detection-on-ci-runner'
+    assert report['result'] == 'no-detection-observed-in-completed-ci-scan'
+    assert all(report.get(key) is True for key in ['scanCompleted', 'protectionVerified', 'cloudConnectionVerified', 'exclusionChecked'])
 result = {
     'architecture': 'precompiled-windows-helper-no-runtime-scripts',
     'sourceCommit': os.environ['GITHUB_SHA'],

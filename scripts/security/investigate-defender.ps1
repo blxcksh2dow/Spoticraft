@@ -1,5 +1,7 @@
 # CI-only investigation. Does NOT execute the JAR/helper or change Defender settings.
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'defender-validation.ps1')
+$script:incomplete = $false
 $root = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
 $results = Join-Path $root 'security-results'
 New-Item -ItemType Directory -Force -Path $results | Out-Null
@@ -8,7 +10,8 @@ $url = 'https://raw.githubusercontent.com/blxcksh2dow/Spoticraft/71b69f0f7fc3610
 $report = [ordered]@{
     runId = $env:GITHUB_RUN_ID; sourceCommit = $env:GITHUB_SHA
     startedUtc = [DateTime]::UtcNow.ToString('o'); expectedSha256 = $expected
-    noSampleExecution = $true; noDefenderPolicyChanges = $true
+    noSampleExecution = $true; ciProtectionSetupRequested = ($env:SPOTICRAFT_CI_PROTECTION_SETUP -eq 'true')
+    noUserDeviceChanges = $true
     attachmentApiIsNotActualBrowser = $true
     outcome = 'incomplete'; steps = @(); limitations = @(
         'Fresh Windows CI runner, not the affected device.',
@@ -25,12 +28,19 @@ function Record([string]$Stage, $Data) {
 function Scan([string]$Path, [string]$Label) {
     $before = (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
     if ($before -ne $expected) { throw 'Artifact hash mismatch; refusing to test a different file.' }
+    $excludedOutput = & $script:scanner -CheckExclusion -Path $Path 2>&1 | Out-String
+    $exclusionCode = $LASTEXITCODE
+    $notExcluded = Test-DefenderNotExcluded $exclusionCode $excludedOutput
+    Record "$Label-exclusion-check" @{ exitCode = $exclusionCode; output = $excludedOutput.Trim(); explicitlyNotExcluded = $notExcluded }
+    if (-not $notExcluded) { $script:incomplete = $true }
     $output = & $script:scanner -Scan -ScanType 3 -File $Path 2>&1 | Out-String
     $code = $LASTEXITCODE
+    $completed = Test-DefenderCompletedScan $code $output
+    if (-not $completed) { $script:incomplete = $true }
     [IO.File]::WriteAllText((Join-Path $results "$Label-scan.log"), $output)
     $exists = Test-Path -LiteralPath $Path
     $after = if ($exists) { (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant() } else { $null }
-    Record $Label @{ exitCode = $code; fileStillExists = $exists; sha256Before = $before; sha256After = $after; output = $output.Trim() }
+    Record $Label @{ scanCompleted = $completed; exitCode = $code; fileStillExists = $exists; sha256Before = $before; sha256After = $after; output = $output.Trim() }
     if ($code -ne 0 -or -not $exists -or $after -ne $before) {
         throw "Scanner changed/removed the sample or returned an error ($Label). No retry or restoration."
     }
@@ -53,6 +63,9 @@ function Read-Environment {
     $properties['OS'] = $os.Caption
     $properties['OSVersion'] = $os.Version
     $properties['OSBuild'] = $os.BuildNumber
+    $issues = @(Get-DefenderValidationIssues $state $preferences)
+    $properties['validationIssues'] = $issues
+    if ($issues.Count -gt 0) { $script:incomplete = $true }
     Record 'defender-environment' $properties
     if (-not $state.AMServiceEnabled -or -not $state.AntivirusEnabled) { throw 'Defender unavailable; no scan verdict is possible.' }
 }
@@ -67,6 +80,7 @@ try {
     $cloudText = & $script:scanner -ValidateMapsConnection 2>&1 | Out-String
     $cloudCode = $LASTEXITCODE
     Record 'maps-connectivity' @{ exitCode = $cloudCode; output = $cloudText.Trim() }
+    if ($cloudCode -ne 0) { $script:incomplete = $true }
     $local = Join-Path $root 'download\spoticraft-26.2.jar'
     Scan $local 'repository-copy-static-scan'
 
@@ -80,13 +94,13 @@ try {
     if ($hash -ne $expected) { throw 'Downloaded sample differs from the reported published artifact.' }
     Add-Type -Path (Join-Path $PSScriptRoot 'AttachmentCheck.cs')
     $hr = [Spoticraft.SecurityDiagnostics.AttachmentCheck]::SaveOnly($download, $url)
-    $zone = try { (Get-Content -LiteralPath $download -Stream Zone.Identifier -ErrorAction Stop) -join "`n" } catch { 'not present or not readable' }
+    $zone = try { ((Get-Content -LiteralPath $download -Stream Zone.Identifier -ErrorAction Stop) -join "`n").Replace([string][char]0, '') } catch { 'not present or not readable' }
     Record 'windows-attachment-save' @{ hresult = $hr; fileStillExists = (Test-Path -LiteralPath $download); zoneIdentifier = $zone }
     if ($hr -ne '0x00000000' -or -not (Test-Path -LiteralPath $download)) {
         throw 'Attachment validation did not succeed; no bypass, execution or restoration attempted.'
     }
     Scan $download 'download-after-attachment-validation'
-    $report.outcome = 'no-block-observed-in-these-tests-not-a-safety-verdict'
+    $report.outcome = if ($script:incomplete) { 'inconclusive-protection-or-scan-not-verified' } else { 'no-detection-observed-in-completed-tests-not-a-safety-verdict' }
 } catch {
     $report.outcome = 'blocked-or-inconclusive-review-steps'
     Record 'investigation-error' @{ type = $_.Exception.GetType().FullName; message = $_.Exception.Message }

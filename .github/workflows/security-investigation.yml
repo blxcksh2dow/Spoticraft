@@ -8,6 +8,7 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+  actions: read
 jobs:
   investigate:
     runs-on: windows-latest
@@ -25,9 +26,31 @@ jobs:
           Copy-Item security/artifact-inventory.json security-results/
           & "$env:JAVA_HOME/bin/javap.exe" -c -p -classpath download/spoticraft-26.2.jar it.blxckshadow.spoticraft.WindowsSpotify it.blxckshadow.spoticraft.BridgeBinary it.blxckshadow.spoticraft.LyricsClient > security-results/java-bytecode.txt
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Test fail-closed scan validation
+        shell: powershell
+        run: ./scripts/security/test-defender-validation.ps1
+      - name: Strengthen protection on this disposable VM only
+        continue-on-error: true
+        shell: powershell
+        run: ./scripts/security/enable-ci-protection.ps1
       - name: Compare static scan and Windows attachment validation on identical bytes
         shell: powershell
+        env:
+          SPOTICRAFT_CI_PROTECTION_SETUP: 'true'
         run: ./scripts/security/investigate-defender.ps1
+      - name: Inspect historical scan logs without executing samples
+        shell: powershell
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          foreach ($id in @('36239885959', '36240553688')) {
+            $lines = gh run view $id --repo blxcksh2dow/Spoticraft --log
+            if ($LASTEXITCODE -ne 0) { Write-Warning "Historical log unavailable: $id"; continue }
+            $matched = @($lines | Where-Object { $_ -match 'was skipped|Scan starting|Scan finished|signatures:|Artifact SHA-256|engine:' })
+            $matched | Set-Content "security-results/historical-$id.txt"
+            $message = ($matched -join "`n").Replace('%', '%25').Replace("`r", '%0D').Replace("`n", '%0A')
+            Write-Host "::notice title=Historical scan $id::$message"
+          }
       - name: Preserve investigation evidence, never publish a mod
         if: always()
         uses: actions/upload-artifact@v4

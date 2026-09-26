@@ -1,0 +1,116 @@
+{
+  "runUrl": "https://github.com/blxcksh2dow/Spoticraft/actions/runs/36241798234",
+  "source": "GitHub check-run annotations",
+  "rawSteps": [
+    {
+      "stage": "summary",
+      "data": {
+        "outcome": "no-block-observed-in-these-tests-not-a-safety-verdict",
+        "jarHash": "3f4e6d149184a01bde57c5b3e1026009bf886659099addffb0425b5fddd63bb4",
+        "noSampleExecution": true
+      }
+    },
+    {
+      "stage": "defender-detections-during-test",
+      "data": []
+    },
+    {
+      "stage": "download-after-attachment-validation",
+      "data": {
+        "output": "Scan starting...\r\nScan finished.\r\nScanning C:\\Users\\runneradmin\\Downloads\\SpoticraftSecurityInvestigation\\spoticraft-26.2 (1).jar was skipped.",
+        "exitCode": 0,
+        "fileStillExists": true,
+        "sha256Before": "3f4e6d149184a01bde57c5b3e1026009bf886659099addffb0425b5fddd63bb4",
+        "sha256After": "3f4e6d149184a01bde57c5b3e1026009bf886659099addffb0425b5fddd63bb4"
+      }
+    },
+    {
+      "unparsedAnnotation": "{\"stage\":\"windows-attachment-save\",\"data\":{\"fileStillExists\":true,\"hresult\":\"0x00000000\",\"zoneIdentifier\":\"[ZoneTransfer]\\nZoneId=3\\nReferrerUrl=https://github.com/blxcksh2dow/Spoticraft\\nHostUrl=https://raw.githubusercontent.com/blxcksh2dow/Spoticraft/71b69f0f7fc3610c6dac2662cbfc25bb869a4811/download/spoticraft-26.2.jar\\^@\"}}",
+      "note": "Original annotation contains an invalid JSON escape; preserved verbatim."
+    },
+    {
+      "stage": "exact-public-download",
+      "data": {
+        "url": "https://raw.githubusercontent.com/blxcksh2dow/Spoticraft/71b69f0f7fc3610c6dac2662cbfc25bb869a4811/download/spoticraft-26.2.jar",
+        "sha256": "3f4e6d149184a01bde57c5b3e1026009bf886659099addffb0425b5fddd63bb4",
+        "matchesRepository": true
+      }
+    },
+    {
+      "stage": "repository-copy-static-scan",
+      "data": {
+        "output": "Scan starting...\r\nScan finished.\r\nScanning D:\\a\\Spoticraft\\Spoticraft\\download\\spoticraft-26.2.jar was skipped.",
+        "exitCode": 0,
+        "fileStillExists": true,
+        "sha256Before": "3f4e6d149184a01bde57c5b3e1026009bf886659099addffb0425b5fddd63bb4",
+        "sha256After": "3f4e6d149184a01bde57c5b3e1026009bf886659099addffb0425b5fddd63bb4"
+      }
+    },
+    {
+      "stage": "maps-connectivity",
+      "data": {
+        "exitCode": -2142207979,
+        "output": "---------------------------- MpCmdRunShowNetworkInfo() ------------------------------\r\nMpIsConnectedToInternet(): hr = 0, fIsConnectToInternet: true\r\nMpIsPaidNetwork(): hr = 0x1 (0 - S_OK, paid; 1 - S_FALSE, not paid; other - failure)\r\n-------------------------------------------------------------------------------------\r\nLast Successful MAPS connection: [9/22/2026 8:53:49 AM]\r\nERROR: ValidateMapsConnection failed (0x80508015)\r\nCmdTool: Failed with hr = 0x80508015. Check C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\MpCmdRun.log for more information"
+      }
+    },
+    {
+      "stage": "defender-environment",
+      "data": {
+        "AMRunningMode": "Normal",
+        "IsTamperProtected": false,
+        "OSBuild": "26100",
+        "DisableIOAVProtection": true,
+        "RealTimeProtectionEnabled": false,
+        "IoavProtectionEnabled": false,
+        "DisableRealtimeMonitoring": true,
+        "DisableBlockAtFirstSeen": true,
+        "AntivirusEnabled": true,
+        "DisableArchiveScanning": true,
+        "OnAccessProtectionEnabled": false,
+        "AMServiceEnabled": true,
+        "PUAProtection": 0,
+        "MAPSReporting": 0,
+        "BehaviorMonitorEnabled": false,
+        "OSVersion": "10.0.26100",
+        "AMEngineVersion": "1.1.26080.3",
+        "SubmitSamplesConsent": 2,
+        "OS": "Microsoft Windows Server 2025 Datacenter",
+        "CloudBlockLevel": 0,
+        "CloudExtendedTimeout": 0,
+        "AMProductVersion": "4.18.26080.4",
+        "AntivirusSignatureVersion": "1.459.412.0",
+        "AntivirusSignatureLastUpdated": "/Date(1790405206000)/"
+      }
+    },
+    {
+      "stage": "defender-environment",
+      "data": {
+        "AMRunningMode": "Normal",
+        "IsTamperProtected": false,
+        "OSBuild": "26100",
+        "DisableIOAVProtection": true,
+        "RealTimeProtectionEnabled": false,
+        "IoavProtectionEnabled": false,
+        "DisableRealtimeMonitoring": true,
+        "DisableBlockAtFirstSeen": true,
+        "AntivirusEnabled": true,
+        "DisableArchiveScanning": true,
+        "OnAccessProtectionEnabled": false,
+        "AMServiceEnabled": true,
+        "PUAProtection": 0,
+        "MAPSReporting": 0,
+        "BehaviorMonitorEnabled": false,
+        "OSVersion": "10.0.26100",
+        "AMEngineVersion": "1.1.26080.3",
+        "SubmitSamplesConsent": 2,
+        "OS": "Microsoft Windows Server 2025 Datacenter",
+        "CloudBlockLevel": 0,
+        "CloudExtendedTimeout": 0,
+        "AMProductVersion": "4.18.26080.4",
+        "AntivirusSignatureVersion": "1.459.335.0",
+        "AntivirusSignatureLastUpdated": "/Date(1790063553000)/"
+      }
+    }
+  ],
+  "reviewConclusion": "INCONCLUSIVE: archive scanning, real-time protection and MAPS disabled; MpCmdRun explicitly skipped both files. The original no-block summary is NOT a valid clean scan verdict."
+}
