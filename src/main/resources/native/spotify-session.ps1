@@ -12,7 +12,20 @@ function Initialize-SpoticraftBridge([string]$ExtraTestSource = '') {
     }
     $references += @(Get-ChildItem (Join-Path $env:SystemRoot 'System32\WinMetadata\*.winmd') | ForEach-Object { $_.FullName })
     $source = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'SpotifyBridge.cs'))
-    Add-Type -TypeDefinition ($source + "`n" + $ExtraTestSource) -ReferencedAssemblies $references -Language CSharp
+    # Add-Type tries to Assembly.LoadFrom each .winmd and fails before compilation.
+    # CodeDOM passes WinRT metadata straight to the .NET Framework C# compiler.
+    Add-Type -AssemblyName Microsoft.CSharp
+    $compiler = New-Object Microsoft.CSharp.CSharpCodeProvider
+    try {
+        $options = New-Object System.CodeDom.Compiler.CompilerParameters
+        $options.GenerateInMemory = $true
+        foreach ($reference in $references) { $null = $options.ReferencedAssemblies.Add($reference) }
+        $compiled = $compiler.CompileAssemblyFromSource($options, [string[]]@($source + "`n" + $ExtraTestSource))
+        if ($compiled.Errors.HasErrors) {
+            throw (($compiled.Errors | Where-Object { -not $_.IsWarning } | ForEach-Object { $_.ToString() }) -join "`n")
+        }
+        $null = $compiled.CompiledAssembly
+    } finally { $compiler.Dispose() }
 }
 function Emit($value) {
     [Console]::WriteLine(($value | ConvertTo-Json -Compress -Depth 5))
