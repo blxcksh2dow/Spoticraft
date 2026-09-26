@@ -10,6 +10,11 @@
 > **non come raccomandazione d'uso**.
 
 
+**Rettifica delle verifiche precedenti:** i log originali mostrano che il runner
+aveva saltato le scansioni dei file. Il precedente esito “pulito” era invalido.
+È stato corretto il controllo; [qui l'indagine con prove e risultati attuali](security/INDAGINE-DEFENDER.md).
+Nessun falso positivo accertato e nessuna nuova build raccomandata.
+
 Widget Spotify per **Minecraft Java 26.2**, **Fabric Loader 0.19.3+**,
 **Fabric API 0.161.0+26.2**, **Windows 10 (1809+) / Windows 11**.
 La versione della mod resta **26.2**.

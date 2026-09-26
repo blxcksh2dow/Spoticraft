@@ -1,5 +1,20 @@
 # Verifica del rilevamento Defender — 26 settembre 2026
 
+## Rettifica comprovata delle precedenti scansioni
+
+**Le vecchie dichiarazioni di scansione pulita erano errate.** I log originali
+riportano `Scanning ... was skipped` sia per i JAR sia per il componente `.exe`.
+Lo script aveva erroneamente accettato il codice di uscita zero senza verificare
+esclusioni e scansione effettiva. Questi esiti sono ritirati.
+
+Vedi [indagine aggiornata e prove](security/INDAGINE-DEFENDER.md). Il successivo
+test sul campione scaricato, in percorso non escluso e con protezioni attive,
+ha effettivamente riportato `found no threats`, ma non ha riprodotto il blocco
+sul dispositivo dell'utente. **La distribuzione resta sospesa.**
+
+Le sezioni successive sono cronologia: non leggere i vecchi esiti come certificati.
+
+
 ## Aggiornamento: rilevata anche la build precompilata
 
 Il nuovo screenshot dell'utente mostra **Trojan:Script/Wacatac.B!ml**, stato

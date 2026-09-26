@@ -18,9 +18,12 @@ Gli hash identificano le copie del repository associate ai link negli screenshot
 non sono stati calcolati sui file del dispositivo dell'utente.
 
 I file restano disponibili per l'analisi: **non sono raccomandati per l'installazione**.
-Il rapporto `spoticraft-26.2-verification.json` è la registrazione storica di una
-scansione CI senza rilevamenti, NON un certificato di sicurezza. Il nome
+Il rapporto `spoticraft-26.2-verification.json` è **ritirato**: i log originali
+mostrano che le scansioni erano state saltate. Il precedente esito era errato,
+NON un certificato di sicurezza. Il nome
 "verification" non implica che il rilevamento sul PC sia stato smentito.
 
 La pubblicazione automatica è bloccata da `SECURITY-HOLD.txt`. Vedi
 [`SECURITY-REVIEW.md`](../SECURITY-REVIEW.md). Nessun falso positivo accertato.
+
+[Indagine aggiornata con evidenze](../security/INDAGINE-DEFENDER.md).

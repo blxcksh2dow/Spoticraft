@@ -14,7 +14,7 @@ function Get-DefenderValidationIssues($Status, $Preferences) {
 function Test-DefenderCompletedScan([int]$ExitCode, [string]$Output) {
     # The English-language CI runner can return 0 after skipping a file.
     # Unknown/localized output is inconclusive, never a passing scan.
-    return ($ExitCode -eq 0 -and $Output -match '(?im)Scan (finished|completed)\.' -and
+    return ($ExitCode -eq 0 -and $Output -match '(?im)Scan (finished|completed)\.' -and $Output -match '(?i)found no threats' -and
         $Output -notmatch '(?i)skipp|exclud|cancel|abort|interrupt|fail|error')
 }
 function Test-DefenderNotExcluded([int]$ExitCode, [string]$Output) {

@@ -1,0 +1,21 @@
+Request for analyst review: suspected incorrect detection, NOT a confirmed false positive.
+
+Product: Spoticraft 26.2, a client-only Fabric mod for Minecraft 26.2 on Windows. A user reports Microsoft Defender Antivirus detection Trojan:Script/Wacatac.B!ml during browser download, including an Active threat entry, on 26 September 2026. Windows/browser/intelligence versions on the affected device are not yet available. No confirmed evidence of sample execution on that device.
+
+Reported JAR SHA-256:
+3f4e6d149184a01bde57c5b3e1026009bf886659099addffb0425b5fddd63bb4
+
+Embedded Spoticraft.Bridge.exe SHA-256:
+8c65e028deba372a5744f5df71eea9f1a2f3d690972a8d16dd807f68a4483d75
+
+Exact published sample:
+https://raw.githubusercontent.com/blxcksh2dow/Spoticraft/71b69f0f7fc3610c6dac2662cbfc25bb869a4811/download/spoticraft-26.2.jar
+
+The JAR includes an unsigned precompiled .NET Framework helper reading Windows GSMTC Spotify sessions. Java extracts/verifies it and launches it without a shell; JSON stdout carries playback metadata. The helper has no networking. Java optionally requests lyrics from https://lrclib.net/api/get. No runtime PowerShell, code compilation, privilege elevation or AV policy changes are part of the mod.
+
+Earlier CI scan claims were withdrawn: MpCmdRun returned zero while explicitly skipping excluded files. A subsequent test of identical downloaded bytes in a non-excluded directory, with real-time/IOAV/archive/MAPS enabled, reported "found no threats" on Windows Server 2025, engine 1.1.26080.3, signatures 1.459.412.0. This does not clear the user's report. Distribution is suspended.
+
+Source and investigation evidence:
+https://github.com/blxcksh2dow/Spoticraft/tree/arena/01a0dd20-spoticraft/security
+
+Please determine whether the detection is correct and advise remediation.

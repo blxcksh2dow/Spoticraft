@@ -1,5 +1,9 @@
 # Verifica Spoticraft 26.2
 
+**Rettifica sicurezza:** le vecchie scansioni CI erano saltate, non pulite.
+Vedi [indagine e test del validatore](security/INDAGINE-DEFENDER.md).
+I test funzionali Java/WinRT restano distinti dalle verifiche antivirus.
+
 Build sostitutiva pubblicata (20 test Java + test nativi + smoke test + scansioni):
 https://github.com/blxcksh2dow/Spoticraft/actions/runs/36240553688
 
