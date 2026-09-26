@@ -29,8 +29,10 @@ try {
         $testExe = Join-Path $testOutput 'Spoticraft.Bridge.Tests.exe'
         & $compiler @common /main:Spoticraft.Tests.TestProgram "/out:$testExe" @sources @tests
         if ($LASTEXITCODE -ne 0) { throw "Native tests compilation failed ($LASTEXITCODE)." }
-        & $testExe
-        if ($LASTEXITCODE -ne 0) { throw "Native regression tests failed ($LASTEXITCODE)." }
+        $testLog = & $testExe 2>&1 | Out-String
+        $testCode = $LASTEXITCODE
+        Write-Host $testLog
+        if ($testCode -ne 0) { throw "Native regression tests failed ($testCode): $testLog" }
     }
 } catch {
     $message = ($_ | Out-String).Replace('%', '%25').Replace("`r", '%0D').Replace("`n", '%0A')
