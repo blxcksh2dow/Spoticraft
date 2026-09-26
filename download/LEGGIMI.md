@@ -5,7 +5,13 @@
 [Scarica direttamente da GitHub](https://github.com/blxcksh2dow/Spoticraft/raw/refs/heads/arena/01a0dd20-spoticraft/download/spoticraft-26.2.jar)
 
 Build e test riusciti su Windows con JDK 25:
-https://github.com/blxcksh2dow/Spoticraft/actions/runs/36235968172
+https://github.com/blxcksh2dow/Spoticraft/actions/runs/36238976276
+
+Questa build include la correzione del bridge WinRT/PowerShell per l'errore
+"Sessione Spotify non disponibile". Superati 18 controlli nativi Windows
+(inclusa la lettura di uno stream WinRT reale), il test JSON e i test Java.
+Mantiene compatibilità dichiarata e compilazione con **Fabric Loader 0.19.3**.
+Sostituisci il vecchio JAR a gioco chiuso; non conservare due copie della mod.
 
 ## Installazione
 
@@ -26,5 +32,5 @@ nuova build. Il JAR non è incluso nello ZIP dei sorgenti: scaricalo separatamen
 SHA-256 della build verificata:
 
 ```
-3768fb708bee24b271d558cb6955121ee026cc70643357e832c24bb1e1a23a7b
+d242a29429aa2b2547bc701052b1807927ab666fbe25b25285053ee4ceb3f313
 ```

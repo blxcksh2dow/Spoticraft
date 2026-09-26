@@ -1,5 +1,26 @@
 # Verifica Spoticraft 26.2
 
+## Correzione bridge Spotify / oggetti COM
+
+- Build riuscita: https://github.com/blxcksh2dow/Spoticraft/actions/runs/36238976276
+- Windows PowerShell **5.1** (lo stesso host avviato dalla mod), non PowerShell 7.
+- 18 controlli in `scripts/WindowsBridgeTests.cs` e test JSON in
+  `scripts/test-windows-bridge.ps1`, eseguiti dalla CI prima della compilazione Java.
+- Lettura/chiusura di stream **WinRT reali**: nessun mock per questa parte.
+- Riprodotto nel vecchio approccio il ritorno di `System.__ComObject`: proprietà
+  dello stream non accessibili e conversione a IInputStream/IDisposable fallita.
+- Verificati con sessioni simulate: titolo senza copertina, pausa, timeline,
+  errori di metadati/playback/copertina/cleanup, retry, cambio brano,
+  più sessioni di cui una non più valida, Spotify chiuso, browser escluso.
+- La compilazione C# usa solo il framework/GAC e WinMetadata del sistema;
+  nessun riferimento ai metadati SDK-only `Windows.winmd` o a Visual Studio.
+- Verificati JAR, requisito Loader >=0.19.3 e inclusione di entrambi i file native.
+- **Non eseguita una riproduzione Spotify interattiva sul PC dell'utente**:
+  questi test non dimostrano che ogni versione di Spotify esponga tutti i dati.
+- In caso di ulteriore errore, chiedere le righe `Spoticraft Windows bridge` in
+  `logs/latest.log`, con fase/HRESULT, non credenziali o cronologia personale.
+
+
 ## Aggiornamento: Fabric Loader 0.19.3
 
 - Build Windows con Loader vincolato a 0.19.3: https://github.com/blxcksh2dow/Spoticraft/actions/runs/36235968172

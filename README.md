@@ -13,9 +13,12 @@ Non serve eseguire i BAT per installare questa build: copia il JAR nella cartell
 `mods` insieme a Fabric API per Minecraft 26.2.
 
 > **Stato: compilazione e test riusciti su Windows con JDK 25 tramite GitHub Actions.**
-> [Build verificata](https://github.com/blxcksh2dow/Spoticraft/actions/runs/36235968172).
+> [Build verificata](https://github.com/blxcksh2dow/Spoticraft/actions/runs/36238976276).
 > Ricompilata con dipendenza vincolata a **Fabric Loader 0.19.3**; requisito minimo
 > nel JAR: `>=0.19.3`. Sostituisci il vecchio JAR, senza conservarne due copie.
+> Corretto il bridge Windows: accesso WinRT tipizzato in C#, errori opzionali isolati
+> e diagnostica in `logs/latest.log`. Superati 18 controlli nativi su Windows
+> (inclusi stream WinRT reali) e un test JSON, oltre ai test Java.
 > Corretto il riferimento non valido a `Options.hideGui` per Minecraft 26.2.
 > Verificati integrità del JAR, classi, risorse e metadati. La prova in gioco
 > con Spotify resta da eseguire. Il progetto e il JAR sono pubblicati nel branch
@@ -125,8 +128,12 @@ può mostrarlo: **non** disattiva il servizio testi.
 
 - Java avvia **un solo processo Windows PowerShell 5.1**, senza profilo né finestra
   interattiva, usando le API Windows **Global System Media Transport Controls**.
-- Il bridge è incluso in `src/main/resources/native/spotify-session.ps1`, viene
-  copiato in `config/spoticraft/` e comunica tramite stdout in JSON UTF-8.
+- Il bridge è incluso in `src/main/resources/native/spotify-session.ps1` e
+  `SpotifyBridge.cs`. Entrambi vengono copiati/aggiornati in `config/spoticraft/`
+  all'avvio. PowerShell compila il piccolo helper C# in memoria con il compilatore
+  .NET Framework e i metadati WinRT già presenti in Windows; non serve installare
+  Visual Studio, Windows SDK o .NET SDK. Gli oggetti WinRT restano in C# e soltanto
+  semplici dati .NET vengono serializzati in JSON UTF-8 verso Java.
   È di sola lettura: non invia comandi di riproduzione e non legge password/cookie.
 - `-ExecutionPolicy Bypass` vale per il solo processo figlio; la policy permanente
   di Windows non viene modificata. Policy aziendali possono comunque impedirne l'avvio.
@@ -155,9 +162,32 @@ può mostrarlo: **non** disattiva il servizio testi.
 - Testo e metadati sono mostrati in italiano per gli stati del widget; i nomi dei
   tasti hanno traduzioni italiana e inglese.
 
+## Se Spotify non viene letto
+
+La vecchia build poteva mostrare **"Sessione Spotify non disponibile"** anche
+quando Spotify era rilevato: PowerShell riceveva alcuni risultati WinRT come
+`System.__ComObject`, senza accesso corretto a proprietà/metodi delle interfacce.
+Una lettura/chiusura fallita dello stream della copertina poteva finire nel catch
+che invalidava l'intera sessione. Il test su Windows ha riprodotto il problema
+COM con uno stream WinRT reale. Senza il vecchio log del PC non è possibile
+attribuire con certezza ogni caso segnalato a questo solo errore.
+
+Il nuovo bridge usa chiamate C# tipizzate. Se copertina o timeline falliscono,
+conserva titolo e artista; se falliscono i metadati essenziali, segnala la fase
+precisa. I dettagli compaiono in **`logs/latest.log`**, nelle righe contenenti
+**`Spoticraft Windows bridge`**, con fase, tipo eccezione e HRESULT.
+Messaggi ripetuti vengono limitati a uno al minuto per tipo di errore; non
+vengono scritti deliberatamente titolo, artista o immagine nei messaggi diagnostici.
+
+Chiudi Minecraft, sostituisci il vecchio JAR e riavvia: i due file bridge vengono
+aggiornati automaticamente, senza dover cancellare la configurazione.
+Se il problema persiste, condividi solo quelle righe di log (controllando che
+non contengano informazioni personali), non l'intero log del client.
+
 ## Verifiche
 
 ```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\test-windows-bridge.ps1
 .\gradlew.bat test
 .\gradlew.bat runClient
 ```
