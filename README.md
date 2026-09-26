@@ -36,6 +36,11 @@ esclusioni e non ripristinare un file segnalato.
 
 ## Download e installazione
 
+**[Scarica il nuovo JAR senza script runtime](https://github.com/blxcksh2dow/Spoticraft/raw/71b69f0f7fc3610c6dac2662cbfc25bb869a4811/download/spoticraft-26.2.jar)**
+
+Build pubblicata e verificata: https://github.com/blxcksh2dow/Spoticraft/actions/runs/36240553688
+
+
 La cartella [`download`](download/LEGGIMI.md) contiene il JAR pubblicato e, per la
 nuova architettura, **`spoticraft-26.2-verification.json`** con hash, scansioni e link
 all'esecuzione CI. Prima di usare una build controlla che il rapporto sia presente

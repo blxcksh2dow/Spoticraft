@@ -1,5 +1,10 @@
 # Verifica del rilevamento Defender — 26 settembre 2026
 
+> La segnalazione qui descritta riguarda la **build ritirata con script runtime**.
+> La nuova architettura precompilata ha un artefatto diverso; il suo rapporto
+> verificabile è in [download/spoticraft-26.2-verification.json](download/spoticraft-26.2-verification.json).
+> Questo non riclassifica il vecchio rilevamento come falso positivo.
+
 ## Segnalazione
 
 Microsoft Defender sul PC dell'utente ha rimosso il download di
@@ -87,3 +92,18 @@ Restano i limiti: eseguibile non firmato Authenticode, assenza di una valutazion
 Microsoft del vecchio campione, possibili differenze di reputazione/protezione cloud
 tra dispositivi, mancata prova interattiva completa sulla macchina dell'utente.
 Se la nuova build è segnalata, non ignorare il rilevamento: serve una nuova analisi.
+
+### Build sostitutiva pubblicata
+
+Run: https://github.com/blxcksh2dow/Spoticraft/actions/runs/36240553688
+
+SHA-256 del JAR:
+`3f4e6d149184a01bde57c5b3e1026009bf886659099addffb0425b5fddd63bb4`
+
+SHA-256 dell'helper incluso:
+`8c65e028deba372a5744f5df71eea9f1a2f3d690972a8d16dd807f68a4483d75`
+
+Defender engine 1.1.26080.3, firme 1.459.410.0: nessun rilevamento su entrambi
+nel runner. Verificati localmente gli hash e l'assenza di script nel JAR recuperato.
+Rimangono validi i limiti sopra: nessuna garanzia di accettazione sul dispositivo
+utente; se bloccato, non ripristinare né aggiungere esclusioni.

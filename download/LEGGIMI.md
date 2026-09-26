@@ -11,12 +11,13 @@ di sola lettura. I sorgenti completi sono nel progetto.
 
 ## Quale file usare
 
-Attendi che in questa cartella compaia **`spoticraft-26.2-verification.json`**
-con `architecture: precompiled-windows-helper-no-runtime-scripts`. Il suo campo
+**Nuova build pubblicata:** [scarica il JAR verificato](https://github.com/blxcksh2dow/Spoticraft/raw/71b69f0f7fc3610c6dac2662cbfc25bb869a4811/download/spoticraft-26.2.jar).
+
+È presente **`spoticraft-26.2-verification.json`** con `architecture: precompiled-windows-helper-no-runtime-scripts`. Il suo campo
 `scans` riporta lo SHA-256 del JAR e del componente, con l'esito Defender e il link CI.
 Non usare una vecchia copia del JAR priva di questo rapporto.
 
-- [JAR corrente](https://github.com/blxcksh2dow/Spoticraft/raw/refs/heads/arena/01a0dd20-spoticraft/download/spoticraft-26.2.jar)
+- [JAR di questa build](https://github.com/blxcksh2dow/Spoticraft/raw/71b69f0f7fc3610c6dac2662cbfc25bb869a4811/download/spoticraft-26.2.jar)
 - [Rapporto della build corrente](spoticraft-26.2-verification.json)
 - [Sorgenti](spoticraft-26.2-source.zip)
 
@@ -30,3 +31,14 @@ Una scansione pulita su CI non garantisce l'accettazione sul tuo PC. Se anche il
 nuovo file viene bloccato, fermati e segnala il rilevamento senza ripristinarlo.
 Il componente non è firmato Authenticode. La prova interattiva con Minecraft e
 Spotify sul tuo PC resta necessaria.
+
+## Verifica della build pubblicata
+
+Run: https://github.com/blxcksh2dow/Spoticraft/actions/runs/36240553688
+
+SHA-256 JAR:
+`3f4e6d149184a01bde57c5b3e1026009bf886659099addffb0425b5fddd63bb4`
+
+Scansioni di JAR e helper su Defender 1.459.410.0 senza rilevamenti sul runner.
+20 test Java, test nativi e smoke test del vero helper superati. Non è una
+certificazione di sicurezza o una verifica completa di gioco sul tuo PC.

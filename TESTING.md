@@ -1,5 +1,8 @@
 # Verifica Spoticraft 26.2
 
+Build sostitutiva pubblicata (20 test Java + test nativi + smoke test + scansioni):
+https://github.com/blxcksh2dow/Spoticraft/actions/runs/36240553688
+
 ## Nuovo bridge precompilato — 26 settembre 2026
 
 Verifica preliminare riuscita:
