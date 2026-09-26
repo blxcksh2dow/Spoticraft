@@ -1,0 +1,5 @@
+defender	Scan existing JAR without executing it	2026-09-26T11:47:10.5339188Z Artifact SHA-256: D242A29429AA2B2547BC701052B1807927AB666FBE25B25285053EE4CEB3F313
+defender	Scan existing JAR without executing it	2026-09-26T11:47:35.9950371Z Defender engine: 1.1.26080.3; signatures: 1.459.410.0; updated: 09/26/2026 03:49:40
+defender	Scan existing JAR without executing it	2026-09-26T11:47:36.4301336Z Scan starting...
+defender	Scan existing JAR without executing it	2026-09-26T11:47:36.4302255Z Scan finished.
+defender	Scan existing JAR without executing it	2026-09-26T11:47:36.4304421Z Scanning D:\a\Spoticraft\Spoticraft\download\spoticraft-26.2.jar was skipped.

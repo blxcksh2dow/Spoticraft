@@ -107,7 +107,7 @@ try {
 } finally {
     try {
         $start = [DateTime]::Parse($report.startedUtc).ToUniversalTime()
-        $threats = @(Get-MpThreatDetection | Where-Object { $_.InitialDetectionTime.ToUniversalTime() -ge $start.AddSeconds(-5) })
+        $threats = @(Get-MpThreatDetection | Where-Object { $_.InitialDetectionTime.ToUniversalTime() -ge $start.AddSeconds(-5) -or (($_.Resources -join ' ') -match '(?i)spoticraft-26\.2') })
         $known = @(Get-MpThreat)
         $details = @($threats | ForEach-Object {
             $threat = $_

@@ -28,5 +28,8 @@
       "engine": "1.1.26080.3"
     }
   ],
-  "limitations": "CI scans are not a guarantee of safety or acceptance by Defender/SmartScreen on another PC. No antivirus exclusions are required or recommended. This does not clear the old reported artifact."
+  "limitations": "CI scans are not a guarantee of safety or acceptance by Defender/SmartScreen on another PC. No antivirus exclusions are required or recommended. This does not clear the old reported artifact.",
+  "validityStatus": "WITHDRAWN: original helper and JAR scans were skipped, not completed",
+  "correctionEvidence": "../security/historical-scan-36240553688.txt",
+  "doNotInstall": true
 }

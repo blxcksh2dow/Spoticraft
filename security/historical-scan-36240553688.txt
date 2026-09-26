@@ -1,0 +1,10 @@
+build	Scan precompiled helper before execution	2026-09-26T12:02:12.8955064Z Artifact SHA-256: 8C65E028DEBA372A5744F5DF71EEA9F1A2F3D690972A8D16DD807F68A4483D75
+build	Scan precompiled helper before execution	2026-09-26T12:02:32.9323736Z Defender engine: 1.1.26080.3; signatures: 1.459.410.0; updated: 09/26/2026 03:49:40
+build	Scan precompiled helper before execution	2026-09-26T12:02:33.0859474Z Scan starting...
+build	Scan precompiled helper before execution	2026-09-26T12:02:33.0861040Z Scan finished.
+build	Scan precompiled helper before execution	2026-09-26T12:02:33.0864662Z Scanning D:\a\Spoticraft\Spoticraft\build\generated\bridge-resources\native\Spoticraft.Bridge.exe was skipped.
+build	Require Defender scan of final JAR	2026-09-26T12:02:35.0932423Z Artifact SHA-256: 3F4E6D149184A01BDE57C5B3E1026009BF886659099ADDFFB0425B5FDDD63BB4
+build	Require Defender scan of final JAR	2026-09-26T12:02:36.9289173Z Defender engine: 1.1.26080.3; signatures: 1.459.410.0; updated: 09/26/2026 03:49:40
+build	Require Defender scan of final JAR	2026-09-26T12:02:36.9772879Z Scan starting...
+build	Require Defender scan of final JAR	2026-09-26T12:02:36.9794737Z Scan finished.
+build	Require Defender scan of final JAR	2026-09-26T12:02:36.9827177Z Scanning D:\a\Spoticraft\Spoticraft\download\spoticraft-26.2.jar was skipped.
