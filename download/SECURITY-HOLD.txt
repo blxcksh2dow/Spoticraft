@@ -9,3 +9,7 @@ Il file resta nel repository per identificare il campione esatto, non come
 raccomandazione di installazione. Non è accertato un falso positivo.
 La pipeline non deve pubblicare nuove build fino al completamento della verifica.
 Una scansione senza rilevamenti su un altro PC non risolve automaticamente il caso.
+
+Verifica successiva: nessun rilevamento sul runner Defender con firme 1.459.410.0
+per lo stesso SHA-256. Non certifica un falso positivo; il blocco resta attivo.
+Dettagli: ../SECURITY-REVIEW.md

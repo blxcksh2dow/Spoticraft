@@ -7,6 +7,7 @@
 > Non ripristinare il file, non disabilitare Defender e non aggiungere esclusioni.
 > I link e gli artefatti sottostanti identificano la build segnalata, non una
 > versione raccomandata per l'installazione. Anche ricompilarla non certifica la sicurezza.
+> Esiti e limiti delle verifiche: [rapporto di sicurezza](../SECURITY-REVIEW.md).
 
 
 **JAR compilato disponibile: [`spoticraft-26.2.jar`](spoticraft-26.2.jar).**
