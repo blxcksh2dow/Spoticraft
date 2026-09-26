@@ -1,5 +1,17 @@
 # Verifica Spoticraft 26.2
 
+## Aggiornamento: build Windows riuscita
+
+- Build GitHub Actions: https://github.com/blxcksh2dow/Spoticraft/actions/runs/36235520219
+- JDK 25, Windows: `gradlew.bat --no-daemon --stacktrace clean downloadMod` riuscito.
+- Compilazione sorgenti e test JUnit completati con successo.
+- Corretto il riferimento a `Options.hideGui`, assente nelle API Minecraft 26.2.
+- JAR salvato in `download/spoticraft-26.2.jar` sul branch della sessione.
+- Verificati archivio ZIP interno, versione 26.2, entrypoint compilato e bridge incluso.
+- Non ancora effettuata una prova interattiva Minecraft/Spotify: la CI non la sostituisce.
+
+Le note seguenti documentano il precedente blocco locale e i controlli manuali ancora utili.
+
 ## Eseguito in questa sessione
 
 - Verificata esistenza di Minecraft/Fabric 26.2 nelle fonti online.
@@ -15,8 +27,8 @@
 ## Da eseguire prima di usare/distribuire il JAR
 
 - [ ] Windows 10 1809+ / Windows 11: `java -version` indica JDK 25.
-- [ ] `gradlew.bat clean downloadMod` termina con BUILD SUCCESSFUL e test verdi.
-- [ ] Il JAR contiene fabric.mod.json con version/minecraft `26.2`, entrypoint,
+- [x] Build Windows CI `gradlew.bat clean downloadMod` riuscita con test verdi.
+- [x] Il JAR contiene fabric.mod.json con version/minecraft `26.2`, entrypoint,
       classi compilate e `native/spotify-session.ps1`.
 - [ ] Avvio Fabric 26.2 + API 0.161.0+26.2: nessun errore in latest.log.
 - [ ] Spotify classico: titolo/artista/copertina corretti, widget in alto a sinistra.

@@ -4,12 +4,20 @@ Mod **client Fabric**, versione **26.2**, destinata a **Minecraft Java 26.2** e
 **Windows 10 (1809+) / Windows 11**, con Spotify desktop (classico o Microsoft Store).
 Nessun account Spotify da collegare alla mod, Client ID o token richiesto.
 
-> **Stato: sorgente implementato, build e prova in gioco non verificate.**
-> In questo ambiente Java non è installato e i download di JDK, Gradle,
-> Fabric e Minecraft sono bloccati da errori TLS/rete. **Non è disponibile un JAR
-> già compilato.** La cartella [`download`](download/LEGGIMI.md) è la destinazione
-> automatica della build su Windows, non una promessa di un artefatto già pronto.
-> Nessun commit, push, release, issue o workflow GitHub è stato creato.
+## Scarica il JAR compilato
+
+**[Download diretto Spoticraft 26.2](https://github.com/blxcksh2dow/Spoticraft/raw/refs/heads/arena/01a0dd20-spoticraft/download/spoticraft-26.2.jar)**
+
+Il file è anche in **`download/spoticraft-26.2.jar`** nel repository.
+Non serve eseguire i BAT per installare questa build: copia il JAR nella cartella
+`mods` insieme a Fabric API per Minecraft 26.2.
+
+> **Stato: compilazione e test riusciti su Windows con JDK 25 tramite GitHub Actions.**
+> [Build verificata](https://github.com/blxcksh2dow/Spoticraft/actions/runs/36235520219).
+> Corretto il riferimento non valido a `Options.hideGui` per Minecraft 26.2.
+> Verificati integrità del JAR, classi, risorse e metadati. La prova in gioco
+> con Spotify resta da eseguire. Il progetto e il JAR sono pubblicati nel branch
+> `arena/01a0dd20-spoticraft`, non in `main`.
 
 ## Widget
 
@@ -37,8 +45,8 @@ Posizione predefinita: **in alto a sinistra**, coordinate GUI `(8, 8)`.
 4. **Solo se la build riesce**, apre Esplora file su
    **`download/spoticraft-26.2.jar`**, pronto da copiare in `mods`.
 
-**Non è un link a un JAR già compilato:** è una procedura automatica per produrlo
-sul tuo PC. Non richiede installare Java manualmente o diritti amministratore e
+Questa procedura serve a ricompilare il sorgente sul tuo PC; per il JAR già
+compilato usa invece il link in cima alla pagina. Non richiede installare Java manualmente o diritti amministratore e
 non modifica permanentemente `JAVA_HOME`, `PATH` o la policy PowerShell.
 Il download automatico del JDK supporta Windows x64; su altre architetture va
 fornito un JDK 25 compatibile tramite `JAVA_HOME`.
@@ -130,8 +138,8 @@ può mostrarlo: **non** disattiva il servizio testi.
 
 ## Limiti e compatibilità da verificare sul PC
 
-- **Non testato su Windows né dentro Minecraft** in questa sessione Linux.
-  Non dichiarato pronto per una release finché non viene compilato e provato.
+- **Compilato e testato con JUnit su un runner Windows**, ma non ancora provato
+  dentro Minecraft né con una sessione Spotify reale.
 - Spotify Web Player non è supportato: viene selezionata solo una sessione con
   identificatore Spotify, non il browser o qualunque altro lettore multimediale.
 - Alcune versioni di Spotify non espongono durata, posizione, copertina o album
@@ -154,7 +162,8 @@ può mostrarlo: **non** disattiva il servizio testi.
 
 Test JUnit inclusi per parsing LRC, tag ripetuti, offset, Unicode, seek indietro,
 righe vuote, fallback testo semplice, interpolazione/pausa/limiti del playback e
-configurazione. **Non eseguiti qui** per mancanza di Java e dipendenze.
+configurazione. **Eseguiti con successo su GitHub Actions Windows**; la sandbox
+locale resta senza Java e con accesso limitato ai server delle dipendenze.
 
 Vedi [`TESTING.md`](TESTING.md) per la checklist Windows e lo stato delle verifiche.
 

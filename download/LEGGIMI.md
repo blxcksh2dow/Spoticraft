@@ -1,25 +1,30 @@
 # Download Spoticraft 26.2
 
-**Il JAR installabile non è ancora presente: la build non è stata eseguita.**
+**JAR compilato disponibile: [`spoticraft-26.2.jar`](spoticraft-26.2.jar).**
 
-Questo ambiente non dispone di Java e le connessioni ai server delle dipendenze
-Fabric/Minecraft/Gradle e del JDK falliscono. Non è stato creato un JAR vuoto o
-un archivio di sorgenti spacciato per mod installabile.
+[Scarica direttamente da GitHub](https://github.com/blxcksh2dow/Spoticraft/raw/refs/heads/arena/01a0dd20-spoticraft/download/spoticraft-26.2.jar)
 
-**Percorso automatico su Windows x64:** scarica `spoticraft-26.2-source.zip`,
-estrailo e apri **`OTTIENI-JAR.bat`**. Scarica un JDK 25 portatile se necessario,
-verifica il checksum, compila e apre la cartella del JAR solo in caso di successo.
-È una compilazione automatica sul tuo PC, **non un download di un JAR precompilato**.
-Lo script non è stato eseguito su Windows in questa sessione.
+Build e test riusciti su Windows con JDK 25:
+https://github.com/blxcksh2dow/Spoticraft/actions/runs/36235520219
 
-In alternativa, installa **JDK 25**, poi avvia `CREA-MOD.bat` dalla cartella principale.
-Il wrapper scarica Gradle e le dipendenze, esegue i test e compila la mod.
-Solo se la compilazione e i test riescono, il risultato viene copiato qui:
+## Installazione
 
-    download/spoticraft-26.2.jar
+1. Installa Fabric Loader 0.19.5 o successivo per **Minecraft 26.2**.
+2. Copia **spoticraft-26.2.jar** nella cartella `mods` della tua istanza.
+3. Aggiungi **Fabric API 0.161.0+26.2** o successiva compatibile con Minecraft 26.2.
+4. Apri Spotify desktop su Windows 10/11 ed entra in un mondo.
 
-Metti quel JAR in `.minecraft/mods` insieme a **Fabric API per Minecraft 26.2**
-e avvia il profilo **Fabric Loader 0.19.5 o successivo** per **Minecraft 26.2**.
+Non devi compilare né eseguire i BAT per installare questo JAR.
+Build e test automatici verificati; funzionamento in gioco con Spotify ancora da provare.
 
-Il file `spoticraft-26.2-sources.jar`, eventualmente presente in `build/libs`,
-NON è la mod installabile. Non installare entrambi.
+## Sorgenti
+
+`spoticraft-26.2-source.zip` contiene i sorgenti aggiornati e gli script per ricompilare.
+Estrai tutto lo ZIP e avvia `OTTIENI-JAR.bat` su Windows x64 solo se vuoi creare una
+nuova build. Il JAR non è incluso nello ZIP dei sorgenti: scaricalo separatamente.
+
+SHA-256 della build verificata:
+
+```
+c4098fd77ee5a58399e3b1d328b417cc9bc380ad11434d7bdba4db7624a84a90
+```
