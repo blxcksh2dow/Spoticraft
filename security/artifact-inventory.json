@@ -1,0 +1,100 @@
+{
+  "jarSha256": "3f4e6d149184a01bde57c5b3e1026009bf886659099addffb0425b5fddd63bb4",
+  "jarSize": 40324,
+  "bridgeSha256": "8c65e028deba372a5744f5df71eea9f1a2f3d690972a8d16dd807f68a4483d75",
+  "authenticodeCertificateBytes": 0,
+  "clrHeaderBytes": 72,
+  "entries": [
+    {
+      "path": "META-INF/MANIFEST.MF",
+      "size": 1001,
+      "sha256": "7c01a513242152badb8b958bb1aac02e75ea8df3be3d16b9fce0065dc97cb2b2"
+    },
+    {
+      "path": "fabric.mod.json",
+      "size": 418,
+      "sha256": "0ed5c72c13b1ea31ab3ed2146c667fa73444a1bdb4ff9230dec0b821d39d2169"
+    },
+    {
+      "path": "assets/spoticraft/lang/en_us.json",
+      "size": 234,
+      "sha256": "ad25a981d984962f0a3f8b0d4b1e812d56ec76ce1940d4bcb58b6272882fd680"
+    },
+    {
+      "path": "assets/spoticraft/lang/it_it.json",
+      "size": 264,
+      "sha256": "7d5d5da578bdbcc86557ed5ab988cc6cd10b03eb51340f42e9b39564976fe2e3"
+    },
+    {
+      "path": "native/Spoticraft.Bridge.exe",
+      "size": 12288,
+      "sha256": "8c65e028deba372a5744f5df71eea9f1a2f3d690972a8d16dd807f68a4483d75"
+    },
+    {
+      "path": "native/Spoticraft.Bridge.sha256",
+      "size": 64,
+      "sha256": "374d0e358c3a58e6bc07ba333af111ca011386d4a8679744eb502e794fac59a4"
+    },
+    {
+      "path": "it/blxckshadow/spoticraft/BridgeBinary$Verified.class",
+      "size": 1758,
+      "sha256": "dc08b0b87e8d69a99603396f26bfff38e72c688892847f1209af05f26f8efccc"
+    },
+    {
+      "path": "it/blxckshadow/spoticraft/BridgeBinary.class",
+      "size": 4766,
+      "sha256": "d86fe4868e1ebeb29e0e211a68ad44813127f6fa99f2f70ac1207d44e2d1bcf7"
+    },
+    {
+      "path": "it/blxckshadow/spoticraft/Lyrics$Line.class",
+      "size": 1637,
+      "sha256": "2e4d855c7c5e5af93d14a3e82b0501bf98ec34cbed91b56f6acee7578e218210"
+    },
+    {
+      "path": "it/blxckshadow/spoticraft/Lyrics.class",
+      "size": 7123,
+      "sha256": "50eb0633432b422fe2cac08e2906c06663261a2405d884a72d6aa2d812d3300b"
+    },
+    {
+      "path": "it/blxckshadow/spoticraft/LyricsClient$1.class",
+      "size": 1473,
+      "sha256": "6f2518f0e8b4e5895d2031b230f2a29e348f815ec8f985e6e54f8347d148aa5c"
+    },
+    {
+      "path": "it/blxckshadow/spoticraft/LyricsClient$Cached.class",
+      "size": 1766,
+      "sha256": "a61d9f1fcbcb07119cb592f952f256ec4043899642589a675ae4a117422c27b9"
+    },
+    {
+      "path": "it/blxckshadow/spoticraft/LyricsClient$Result.class",
+      "size": 1786,
+      "sha256": "773331f7f7c4293e085fc62c7ef6279d12d068c06c23c9e0ea0f36ccbc54a014"
+    },
+    {
+      "path": "it/blxckshadow/spoticraft/LyricsClient.class",
+      "size": 10459,
+      "sha256": "38490aeac7a73288a7294e505862e2506cc8b3c407323ce57fc614f6b72a3f22"
+    },
+    {
+      "path": "it/blxckshadow/spoticraft/Playback.class",
+      "size": 4018,
+      "sha256": "56a53230fc6e654ab5256ecd9c8c459ac138c9637cad78f3dcecacea5914a210"
+    },
+    {
+      "path": "it/blxckshadow/spoticraft/SpoticraftClient.class",
+      "size": 11545,
+      "sha256": "a20edc2d8e63e17d593cbd11815b5b829481bd055a5662293e250c35fc7bb1cb"
+    },
+    {
+      "path": "it/blxckshadow/spoticraft/WidgetConfig.class",
+      "size": 4374,
+      "sha256": "51c143cbde61b74f5c8ce912a5914065da88733f3d968d659a8c714d29737f2f"
+    },
+    {
+      "path": "it/blxckshadow/spoticraft/WindowsSpotify.class",
+      "size": 14288,
+      "sha256": "8ba9ef93bc4852663fd2be029f52df8fa5ff30b8c6de741a5b504a4e71d01f01"
+    }
+  ],
+  "limitations": "Static archive inventory only. No maliciousness determination. No execution."
+}

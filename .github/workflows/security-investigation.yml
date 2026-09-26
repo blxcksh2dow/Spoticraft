@@ -1,0 +1,37 @@
+name: Investigate reported Defender detection (no execution)
+on:
+  push:
+    branches: [arena/01a0dd20-spoticraft]
+    paths:
+      - '.github/workflows/security-investigation.yml'
+      - 'scripts/security/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  investigate:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '25'
+      - name: Record inventory and disassemble Java without executing the mod
+        shell: powershell
+        run: |
+          New-Item -ItemType Directory -Force security-results | Out-Null
+          Copy-Item security/artifact-inventory.json security-results/
+          & "$env:JAVA_HOME/bin/javap.exe" -c -p -classpath download/spoticraft-26.2.jar it.blxckshadow.spoticraft.WindowsSpotify it.blxckshadow.spoticraft.BridgeBinary it.blxckshadow.spoticraft.LyricsClient > security-results/java-bytecode.txt
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Compare static scan and Windows attachment validation on identical bytes
+        shell: powershell
+        run: ./scripts/security/investigate-defender.ps1
+      - name: Preserve investigation evidence, never publish a mod
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: defender-investigation-evidence
+          path: security-results/
+          if-no-files-found: error
