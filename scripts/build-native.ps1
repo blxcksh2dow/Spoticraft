@@ -21,7 +21,12 @@ try {
     $exe = Join-Path $output 'Spoticraft.Bridge.exe'
     & $compiler @common /main:Spoticraft.Native.Program "/out:$exe" @sources
     if ($LASTEXITCODE -ne 0) { throw "Native bridge compilation failed ($LASTEXITCODE)." }
-    $hash = (Get-FileHash -LiteralPath $exe -Algorithm SHA256).Hash.ToLowerInvariant()
+    # A Gradle child can inherit PowerShell 7's module path. Use the framework API
+    # rather than relying on the auto-loaded Get-FileHash script module.
+    $sha = [Security.Cryptography.SHA256]::Create()
+    $stream = [IO.File]::OpenRead($exe)
+    try { $hash = [BitConverter]::ToString($sha.ComputeHash($stream)).Replace('-', '').ToLowerInvariant() }
+    finally { $stream.Dispose(); $sha.Dispose() }
     [IO.File]::WriteAllText((Join-Path $output 'Spoticraft.Bridge.sha256'), $hash, [Text.Encoding]::ASCII)
     Write-Host "Bridge built: $exe (SHA-256 $hash)"
     if ($RunTests) {
